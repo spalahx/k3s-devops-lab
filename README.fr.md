@@ -14,6 +14,24 @@ Instructions pas à pas pour transformer un mini-PC (ou un VPS cloud) en serveur
 
 Le résultat : une boîte dans un coin qui fait tourner vos sites 24 h/24, et un ordinateur portable qui ne contient plus qu'un éditeur et un navigateur.
 
+## Vue d'ensemble
+
+```mermaid
+flowchart LR
+    L["Portable<br/>IDE, navigateur"] -- "SSH via ProxyJump" --> V["Passerelle VPS<br/>IP publique"]
+    V -- "tunnel SSH inverse" --> S
+    L -. "même réseau : HTTP via le fichier hosts" .-> S
+    subgraph S["Serveur maison, Ubuntu"]
+        subgraph K["K3s"]
+            I["Ingress Traefik"]
+            I --> A["project-a<br/>app + base"]
+            I --> B["project-b<br/>app + base"]
+            I --> M["monitoring<br/>Prometheus, Grafana, Loki"]
+            O["ai-models<br/>Ollama"]
+        end
+    end
+```
+
 ## Pourquoi avoir son propre serveur de développement
 
 - **Portable ancien ou peu puissant.** Conteneurs, bases de données et supervision tournent sur le serveur. Le portable ne fait tourner qu'un IDE et un navigateur.

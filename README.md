@@ -14,6 +14,24 @@ Step-by-step instructions for turning a mini-PC (or a cloud VPS) into a dev serv
 
 The result: a box in the corner that runs your sites 24/7, and a laptop that only holds an editor and a browser.
 
+## How it fits together
+
+```mermaid
+flowchart LR
+    L["Laptop<br/>IDE, browser"] -- "SSH via ProxyJump" --> V["VPS gateway<br/>public IP"]
+    V -- "reverse SSH tunnel" --> S
+    L -. "same network: HTTP via hosts file" .-> S
+    subgraph S["Home server, Ubuntu"]
+        subgraph K["K3s"]
+            I["Traefik ingress"]
+            I --> A["project-a<br/>app + db"]
+            I --> B["project-b<br/>app + db"]
+            I --> M["monitoring<br/>Prometheus, Grafana, Loki"]
+            O["ai-models<br/>Ollama"]
+        end
+    end
+```
+
 ## Why run your own dev server
 
 - **Weak or old laptop.** Containers, databases and monitoring run on the server. The laptop only runs an IDE and a browser.
