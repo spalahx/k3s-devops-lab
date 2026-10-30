@@ -1,4 +1,4 @@
-# k3s-homelab-devbox
+# k3s-devops-lab
 
 ![Ubuntu](https://img.shields.io/badge/Ubuntu_Server-24.04_LTS-E95420?logo=ubuntu&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
