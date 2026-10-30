@@ -1,0 +1,86 @@
+# Застосунок: PHP-FPM + Nginx в одному поді, Service, Ingress.
+# Перед застосуванням замініть <PROJECT_NAME>, <PROJECT_GROUP>, <SERVER_USER>, <DOMAIN_BASE>.
+# Потрібно: образ <PROJECT_NAME>-php:latest, імпортований у containerd K3s,
+# і каталог k8s-local/nginx з default.conf.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <PROJECT_NAME>-app
+  namespace: <PROJECT_NAME>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: <PROJECT_NAME>
+  template:
+    metadata:
+      labels:
+        app: <PROJECT_NAME>
+    spec:
+      containers:
+      # PHP-FPM, зібраний із власного Dockerfile проєкту
+      - name: php
+        image: <PROJECT_NAME>-php:latest
+        imagePullPolicy: Never        # образ існує лише локально в containerd
+        workingDir: /var/www/html
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - name: code-volume
+          mountPath: /var/www/html
+      # Nginx: статичні файли + FastCGI до PHP-FPM на 127.0.0.1:9000 (той самий под = та сама мережа)
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: code-volume
+          mountPath: /var/www/html
+          readOnly: true
+        - name: nginx-conf
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+      volumes:
+      - name: code-volume              # код проєкту та wp-content, читаються просто з диска
+        hostPath:
+          path: /home/<SERVER_USER>/workspace/<PROJECT_GROUP>/<PROJECT_NAME>
+          type: DirectoryOrCreate
+      - name: nginx-conf               # лише конфіг сайту Nginx, а не весь репозиторій
+        hostPath:
+          path: /home/<SERVER_USER>/workspace/<PROJECT_GROUP>/<PROJECT_NAME>/k8s-local/nginx
+          type: Directory              # має існувати, інакше под залишиться в Pending
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: <PROJECT_NAME>-service
+  namespace: <PROJECT_NAME>
+spec:
+  selector:
+    app: <PROJECT_NAME>
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: <PROJECT_NAME>-ingress
+  namespace: <PROJECT_NAME>
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  rules:
+  - host: <PROJECT_NAME>.<DOMAIN_BASE>   # має бути унікальним серед усіх проєктів
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: <PROJECT_NAME>-service
+            port:
+              number: 80

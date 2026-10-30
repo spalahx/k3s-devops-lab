@@ -1,0 +1,86 @@
+# Application: PHP-FPM + Nginx in one pod, Service, Ingress.
+# Replace <PROJECT_NAME>, <PROJECT_GROUP>, <SERVER_USER>, <DOMAIN_BASE> before applying.
+# Requires: image <PROJECT_NAME>-php:latest imported into K3s containerd,
+# and the directory k8s-local/nginx with default.conf.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <PROJECT_NAME>-app
+  namespace: <PROJECT_NAME>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: <PROJECT_NAME>
+  template:
+    metadata:
+      labels:
+        app: <PROJECT_NAME>
+    spec:
+      containers:
+      # PHP-FPM, built from the project's own Dockerfile
+      - name: php
+        image: <PROJECT_NAME>-php:latest
+        imagePullPolicy: Never        # image exists only locally in containerd
+        workingDir: /var/www/html
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - name: code-volume
+          mountPath: /var/www/html
+      # Nginx: static files + FastCGI to PHP-FPM on 127.0.0.1:9000 (same pod = same network)
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: code-volume
+          mountPath: /var/www/html
+          readOnly: true
+        - name: nginx-conf
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+      volumes:
+      - name: code-volume              # project code and wp-content, live from disk
+        hostPath:
+          path: /home/<SERVER_USER>/workspace/<PROJECT_GROUP>/<PROJECT_NAME>
+          type: DirectoryOrCreate
+      - name: nginx-conf               # only the Nginx site config, not the whole repo
+        hostPath:
+          path: /home/<SERVER_USER>/workspace/<PROJECT_GROUP>/<PROJECT_NAME>/k8s-local/nginx
+          type: Directory              # must exist, otherwise the pod stays Pending
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: <PROJECT_NAME>-service
+  namespace: <PROJECT_NAME>
+spec:
+  selector:
+    app: <PROJECT_NAME>
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: <PROJECT_NAME>-ingress
+  namespace: <PROJECT_NAME>
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  rules:
+  - host: <PROJECT_NAME>.<DOMAIN_BASE>   # must be unique across all projects
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: <PROJECT_NAME>-service
+            port:
+              number: 80

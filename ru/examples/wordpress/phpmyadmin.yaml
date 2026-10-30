@@ -1,0 +1,66 @@
+# phpMyAdmin для одного проекта: Deployment + Service + Ingress.
+# Перед применением замените <PROJECT_NAME>, <DOMAIN_BASE>.
+# Вход: root и DB_ROOT_PASSWORD из Secret проекта.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <PROJECT_NAME>-phpmyadmin
+  namespace: <PROJECT_NAME>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: <PROJECT_NAME>-phpmyadmin
+  template:
+    metadata:
+      labels:
+        app: <PROJECT_NAME>-phpmyadmin
+    spec:
+      containers:
+      - name: phpmyadmin
+        image: phpmyadmin:5
+        env:
+        - name: PMA_HOST                 # имя Service из db.yaml
+          value: "<PROJECT_NAME>-db-service"
+        - name: PMA_ABSOLUTE_URI         # публичный HTTPS-адрес; убирает проблемы с cookie/редиректами за Traefik
+          value: "https://<PROJECT_NAME>-pma.<DOMAIN_BASE>/"
+        - name: PMA_STORAGE              # отключить configuration storage (требует доп. таблиц)
+          value: ""
+        ports:
+        - containerPort: 80
+        resources:
+          limits: { memory: 256Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: <PROJECT_NAME>-phpmyadmin-svc
+  namespace: <PROJECT_NAME>
+spec:
+  selector:
+    app: <PROJECT_NAME>-phpmyadmin
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: <PROJECT_NAME>-phpmyadmin-ingress
+  namespace: <PROJECT_NAME>
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  rules:
+  - host: <PROJECT_NAME>-pma.<DOMAIN_BASE>
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: <PROJECT_NAME>-phpmyadmin-svc
+            port:
+              number: 80

@@ -1,0 +1,64 @@
+# MySQL for one project: Deployment + Service.
+# Replace <PROJECT_NAME>, <PROJECT_GROUP>, <SERVER_USER> before applying.
+# Expects Secret "<PROJECT_NAME>-secret" with keys DB_ROOT_PASSWORD and DB_NAME
+# (see docs/05-deploying-projects/generic-deployment-walkthrough.md).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <PROJECT_NAME>-db
+  namespace: <PROJECT_NAME>
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate            # two MySQL processes must never share one data dir
+  selector:
+    matchLabels:
+      app: <PROJECT_NAME>-db  # must match template labels and the Service selector
+  template:
+    metadata:
+      labels:
+        app: <PROJECT_NAME>-db
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.4
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: <PROJECT_NAME>-secret
+              key: DB_ROOT_PASSWORD
+        - name: MYSQL_DATABASE        # created on first start only
+          valueFrom:
+            secretKeyRef:
+              name: <PROJECT_NAME>-secret
+              key: DB_NAME
+        args:
+        - --character-set-server=utf8mb4
+        - --collation-server=utf8mb4_general_ci
+        ports:
+        - containerPort: 3306
+        resources:
+          requests: { cpu: 100m, memory: 256Mi }
+          limits:   { memory: 1Gi }
+        volumeMounts:
+        - name: mysql-storage
+          mountPath: /var/lib/mysql   # exactly this path, otherwise data is lost on pod restart
+      volumes:
+      - name: mysql-storage
+        hostPath:
+          path: /home/<SERVER_USER>/workspace/<PROJECT_GROUP>/<PROJECT_NAME>/k8s-local/mysql-data
+          type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: <PROJECT_NAME>-db-service   # DB host for wp-config.php and PMA_HOST
+  namespace: <PROJECT_NAME>
+spec:
+  selector:
+    app: <PROJECT_NAME>-db
+  ports:
+  - protocol: TCP
+    port: 3306
+    targetPort: 3306
