@@ -17,7 +17,7 @@ tasks:
 
   lint:
     desc: Run all static checks
-    deps: [lint:yaml, lint:shell, lint:md, lint:links, lint:secrets, lint:iac]
+    deps: [lint:yaml, lint:shell, lint:md, lint:links, lint:secrets, lint:tf, lint:iac]
 
   lint:yaml:
     desc: yamllint on workflows, config and platform files (the frozen v1 examples are excluded)
@@ -43,6 +43,11 @@ tasks:
     desc: gitleaks over the whole git history
     cmds:
       - gitleaks git --config .gitleaks.toml --redact --no-banner .
+
+  lint:tf:
+    desc: terraform fmt, validate, tests (mocked provider) and tflint, no AWS credentials needed
+    cmds:
+      - ./scripts/terraform-check.sh
 
   lint:iac:
     desc: Static checks of Terraform, Kubernetes manifests and Dockerfiles

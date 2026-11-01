@@ -27,3 +27,5 @@ jobs:
         run: task doctor
       - name: Lint
         run: task lint
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # avoids rate limits when tflint downloads its plugins
