@@ -1,0 +1,9 @@
+# After the first apply, move the state into the bucket it created:
+#   cp backend.hcl.example backend.hcl        # then replace <ACCOUNT_ID> and the region
+#   terraform init -migrate-state -backend-config=backend.hcl
+# (add `backend "s3" {}` to a new file backend.tf first; both files stay local, see README)
+bucket       = "k3s-devops-lab-state-<ACCOUNT_ID>"
+key          = "bootstrap/terraform.tfstate"
+region       = "us-east-1"
+use_lockfile = true
+encrypt      = true

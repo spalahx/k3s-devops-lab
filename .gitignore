@@ -16,3 +16,4 @@ age.key
 crash.log
 *.tfvars
 !*.example.tfvars
+backend.hcl

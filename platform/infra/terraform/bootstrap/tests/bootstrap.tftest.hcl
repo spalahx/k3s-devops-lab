@@ -1,0 +1,85 @@
+# Runs without AWS credentials: the provider is mocked.
+
+mock_provider "aws" {
+  mock_data "aws_caller_identity" {
+    defaults = { account_id = "123456789012" }
+  }
+
+  mock_data "aws_partition" {
+    defaults = { partition = "aws" }
+  }
+}
+
+variables {
+  region            = "us-east-1"
+  owner             = "tester"
+  github_repository = "example/lab"
+  alert_email       = "alerts@example.com"
+}
+
+run "buckets_are_private_versioned_and_encrypted" {
+  command = plan
+
+  assert {
+    condition     = module.state_bucket.public_access_blocked && module.backup_bucket.public_access_blocked
+    error_message = "Every bucket must block all public access."
+  }
+
+  assert {
+    condition     = module.state_bucket.versioning_status == "Enabled" && module.backup_bucket.versioning_status == "Enabled"
+    error_message = "Every bucket must be versioned."
+  }
+
+  assert {
+    condition     = module.state_bucket.encryption_algorithm == "AES256" && module.backup_bucket.encryption_algorithm == "AES256"
+    error_message = "Every bucket must be encrypted by default."
+  }
+
+  assert {
+    condition     = module.state_bucket.name == "k3s-devops-lab-state-123456789012"
+    error_message = "State bucket name must include the project and the account id."
+  }
+
+  assert {
+    condition     = module.backup_bucket.name == "k3s-devops-lab-backups-123456789012"
+    error_message = "Backup bucket name must include the project and the account id."
+  }
+}
+
+run "ci_roles_are_bound_to_the_repository" {
+  command = plan
+
+  assert {
+    condition     = output.ci_trust_subjects.plan == "repo:example/lab:pull_request"
+    error_message = "The plan role must only trust pull requests of the repository."
+  }
+
+  assert {
+    condition     = output.ci_trust_subjects.apply == "repo:example/lab:environment:aws-apply"
+    error_message = "The apply role must only trust the protected Environment of the repository."
+  }
+}
+
+run "budget_has_four_alerts" {
+  command = plan
+
+  assert {
+    condition     = length(aws_budgets_budget.monthly.notification) == 4
+    error_message = "Expect 50, 80, 100 percent actual and 100 percent forecasted alerts."
+  }
+
+  assert {
+    condition     = aws_budgets_budget.monthly.limit_amount == "20"
+    error_message = "Default monthly budget is 20 USD."
+  }
+}
+
+run "rejects_a_malformed_repository" {
+  command = plan
+
+  variables {
+    github_repository = "not-a-repository"
+  }
+
+  expect_failures = [var.github_repository]
+}

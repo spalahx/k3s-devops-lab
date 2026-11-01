@@ -7,6 +7,7 @@ All notable changes are listed here. Format: [Keep a Changelog](https://keepacha
 ### Added
 
 - Repository scaffold for the automated lab: pinned tool versions, `task doctor`, static checks in CI, example configuration, module template.
+- AWS bootstrap Terraform module (state and backup buckets, GitHub OIDC with plan and apply roles, budget and cost anomaly alerts) with mocked-provider tests; checks run in CI without AWS credentials. Not yet applied to a real account.
 
 ### Changed
 
