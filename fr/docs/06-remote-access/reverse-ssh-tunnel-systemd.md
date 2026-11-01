@@ -1,5 +1,7 @@
 # Tunnel SSH inverse en tant que service systemd
 
+> **Statut : non vérifié sur du matériel réel.** Le serveur de référence avec lequel ce guide a été vérifié n'a ni service de tunnel inversé ni passerelle VPS ; les étapes de cette page ont donc été écrites d'après la documentation et n'ont pas été exécutées de bout en bout. Considérez les commandes comme un point de départ et vérifiez chacune d'elles.
+
 Maintient une connexion SSH sortante permanente du serveur domestique vers le VPS, en publiant le port SSH du serveur domestique sous la forme `127.0.0.1:<TUNNEL_PORT>` sur le VPS. Nécessite la [passerelle VPS](vps-gateway-setup.md) avec l'utilisateur et la clé du tunnel.
 
 ## 1. Test manuel

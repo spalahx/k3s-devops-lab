@@ -1,5 +1,7 @@
 # Configuration de la passerelle VPS
 
+> **Statut : non vérifié sur du matériel réel.** Le serveur de référence avec lequel ce guide a été vérifié n'a ni service de tunnel inversé ni passerelle VPS ; les étapes de cette page ont donc été écrites d'après la documentation et n'ont pas été exécutées de bout en bout. Considérez les commandes comme un point de départ et vérifiez chacune d'elles.
+
 Prépare un petit VPS loué avec une IP publique fixe, servant de point de rendez-vous pour un serveur domestique derrière un NAT ou une IP dynamique. Ignorez cette étape si le serveur dispose déjà d'une IP publique fixe (par exemple un VPS cloud), ou si vous préférez un VPN tel que WireGuard/Tailscale.
 
 Principe : le serveur domestique ouvre une connexion SSH sortante vers le VPS et y publie son propre port SSH (`ssh -R`). Les clients se connectent au VPS, qui retransmet le trafic via cette connexion. Aucune redirection de port sur le routeur n'est nécessaire, et l'IP domestique peut changer.
