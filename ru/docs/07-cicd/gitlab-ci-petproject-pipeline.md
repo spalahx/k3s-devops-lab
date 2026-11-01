@@ -1,5 +1,7 @@
 # GitLab CI pipeline: сборка и деплой в K3s
 
+> **Статус: не проверено на реальном железе.** На эталонном сервере, с которым сверялось это руководство, не установлен GitLab Runner, поэтому конвейер на этой странице не проходился от начала до конца. Считайте команды отправной точкой и проверяйте каждую.
+
 Настраивает self-hosted GitLab Runner на сервере и `.gitlab-ci.yml`, который собирает Docker-образ, пушит его в GitLab Container Registry и обновляет существующий Deployment в K3s при каждом push в `main`. Сначала используйте тестовый проект. Собственный runner не нужен, если хватает shared runners на gitlab.com и кластер доступен им (в домашней сети обычно недоступен).
 
 Предусловия: работающий [K3s](../03-containers-and-k3s/k3s-install.md) с Deployment приложения, один раз созданным вручную (см. [пошаговый деплой](../05-deploying-projects/generic-deployment-walkthrough.md)), и [Docker](../03-containers-and-k3s/docker-install.md) на сервере. Пайплайн только обновляет образ, манифесты он не создаёт.
@@ -149,9 +151,9 @@ variables:
 
 build:
   stage: build
-  image: docker:27
+  image: docker:29.9.2
   services:
-    - docker:27-dind
+    - docker:29.9.2-dind
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   tags: [k3s]
@@ -166,7 +168,7 @@ build:
 deploy:
   stage: deploy
   image:
-    name: alpine/k8s:1.30.4
+    name: alpine/k8s:<KUBECTL_VERSION>
     entrypoint: [""]
   tags: [k3s]
   script:
@@ -179,10 +181,10 @@ deploy:
 | Элемент | Пояснение |
 |---|---|
 | `$CI_COMMIT_SHORT_SHA` | Предопределённая переменная GitLab; уникальный тег на коммит, по нему видно, какая версия запущена |
-| `docker:27-dind` | Сервис Docker-in-Docker, чтобы задача могла выполнять `docker build` |
+| `docker:29.9.2-dind` | Сервис Docker-in-Docker, чтобы задача могла выполнять `docker build` |
 | `DOCKER_TLS_CERTDIR` | Клиент и демон dind используют общие TLS-сертификаты; без этого `Cannot connect to the Docker daemon` |
 | `$CI_REGISTRY_*` | Предопределены; job token автоматически входит в registry проекта |
-| `alpine/k8s` | Образ с `kubectl` и shell; зафиксируйте тег под версию кластера |
+| `alpine/k8s:<KUBECTL_VERSION>` | Образ с `kubectl` и оболочкой. `kubectl` может отличаться от кластера не более чем на одну минорную версию, поэтому берите тег по кластеру: `kubectl version` показывает версию сервера (например, `v1.36.4` означает тег `1.36.x`). Закрепляйте точный тег, не `latest` |
 | Namespace | Берётся из контекста kubeconfig, `-n` не нужен |
 
 ## Verify
