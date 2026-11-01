@@ -56,6 +56,10 @@ flowchart LR
 | Monitoring | Helm, Prometheus + Grafana, Loki |
 | Extras | Samba file share |
 
+## Status
+
+The manual guide documents one real home-server setup and was written from the author's notes; it has not been replayed from scratch. See [known differences and problems not covered](en/docs/99-appendix/known-differences.md). An automated, tested version for AWS is in development.
+
 ## Start here
 
 - [English documentation](en/README.md)
