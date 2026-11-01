@@ -22,3 +22,8 @@ output "apply_role_arn" {
   description = "Role for apply jobs in the protected Environment; set as AWS_APPLY_ROLE_ARN in GitHub."
   value       = aws_iam_role.apply.arn
 }
+
+output "ci_trust_subjects" {
+  description = "OIDC subjects accepted by the CI roles."
+  value       = local.subjects
+}

@@ -52,5 +52,5 @@ tasks:
   lint:iac:
     desc: Static checks of Terraform, Kubernetes manifests and Dockerfiles
     cmds:
-      - trivy config --severity HIGH,CRITICAL --exit-code 1 platform
-      - checkov --quiet --compact --directory platform --framework terraform,kubernetes,dockerfile,github_actions
+      - ./scripts/ci-run.sh "trivy config" trivy config --severity HIGH,CRITICAL --exit-code 1 platform
+      - ./scripts/ci-run.sh "checkov" checkov --quiet --compact --directory platform --framework terraform,kubernetes,dockerfile,github_actions

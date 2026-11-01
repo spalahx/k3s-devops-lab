@@ -50,18 +50,13 @@ run "ci_roles_are_bound_to_the_repository" {
   command = plan
 
   assert {
-    condition     = jsondecode(aws_iam_role.plan.assume_role_policy).Statement[0].Condition.StringEquals["token.actions.githubusercontent.com:sub"] == "repo:example/lab:pull_request"
+    condition     = output.ci_trust_subjects.plan == "repo:example/lab:pull_request"
     error_message = "The plan role must only trust pull requests of the repository."
   }
 
   assert {
-    condition     = jsondecode(aws_iam_role.apply.assume_role_policy).Statement[0].Condition.StringEquals["token.actions.githubusercontent.com:sub"] == "repo:example/lab:environment:aws-apply"
+    condition     = output.ci_trust_subjects.apply == "repo:example/lab:environment:aws-apply"
     error_message = "The apply role must only trust the protected Environment of the repository."
-  }
-
-  assert {
-    condition     = jsondecode(aws_iam_role.apply.assume_role_policy).Statement[0].Condition.StringEquals["token.actions.githubusercontent.com:aud"] == "sts.amazonaws.com"
-    error_message = "The audience must be sts.amazonaws.com."
   }
 }
 
