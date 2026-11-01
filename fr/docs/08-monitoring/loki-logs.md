@@ -72,7 +72,7 @@ helm install loki grafana/loki \
   --wait --timeout 5m
 ```
 
-> **Avertissement :** si la version du chart que vous installez rejette une clé ci-dessus, comparez avec `helm show values grafana/loki` ; ce fichier cible la branche 6.x du chart.
+> **Avertissement :** si la version du chart que vous installez rejette une clé ci-dessus, comparez avec `helm show values grafana/loki` ; ce fichier a été écrit pour la branche 6.x du chart. Le serveur de référence utilise le chart 7.3.0 (Loki 3.6.12) avec la même disposition `SingleBinary` ; comparez quand même les clés avec `helm show values grafana/loki` avant l'installation.
 
 ## 2. Promtail
 
@@ -99,7 +99,7 @@ helm install promtail grafana/promtail \
 
 K3s utilise containerd, dont les journaux sont au format CRI sous `/var/log/pods/<namespace>_<pod>_<uid>/<container>/*.log`. La configuration de collecte par défaut du chart monte `/var/log/pods` et analyse le format CRI, aucun changement de chemin n'est donc nécessaire. N'ajustez les montages que si K3s s'exécute avec un `--data-dir` ou un répertoire de journaux personnalisé.
 
-> **Avertissement :** Promtail est en mode maintenance ; Grafana Alloy est son successeur. Promtail fonctionne toujours avec le chart ci-dessus et reste l'option la plus simple sur un seul nœud.
+> **Avertissement :** Promtail est déprécié au profit de Grafana Alloy ; vérifiez l'état du projet avant de l'utiliser pour une nouvelle installation. Le serveur de référence exécute Loki sans aucun collecteur de logs : les étapes Promtail de cette page n'ont donc pas été vérifiées sur du matériel réel. Préférez Alloy pour une nouvelle installation.
 
 ## 3. Ajouter Loki à Grafana
 
