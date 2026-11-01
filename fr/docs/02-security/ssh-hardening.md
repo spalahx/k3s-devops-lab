@@ -61,6 +61,8 @@ ssh <SERVER_HOSTNAME>
 
 Ubuntu lit les fichiers complémentaires de `/etc/ssh/sshd_config.d/`, et la première valeur l'emporte ; un fichier préfixé par `01-` remplace donc les valeurs par défaut des images cloud (`50-cloud-init.conf` peut définir `PasswordAuthentication yes`).
 
+> **Avertissement :** ne placez pas ces lignes à la place dans le fichier principal `/etc/ssh/sshd_config`. L'`Include` de `sshd_config.d/*.conf` se trouve au-dessus, donc un `PasswordAuthentication yes` venant de `50-cloud-init.conf` l'emporte quand même et la connexion par mot de passe reste activée alors que le fichier principal indique `no`. Vérifiez toujours avec `sudo sshd -T` (ci-dessous).
+
 ```bash
 sudo tee /etc/ssh/sshd_config.d/01-hardening.conf >/dev/null <<'CONF'
 PasswordAuthentication no
@@ -87,7 +89,27 @@ Choisissez un port libre supérieur à 1024 (par exemple `2222`). Appliquez dans
 3. Testez le nouveau port depuis un second terminal.
 4. Seulement ensuite, supprimez le port 22.
 
-Sur Ubuntu 22.10+ (dont 24.04), SSH est démarré par **activation par socket** : `ssh.socket` possède le port d'écoute et, selon la version, ignore `Port` dans `sshd_config`. Définissez le port sur le socket :
+SSH sur Ubuntu est démarré par **activation par socket** : `ssh.socket` possède le port d'écoute. La façon dont le port est choisi dépend de la version :
+
+- **Ubuntu 26.04 (vérifié sur un serveur de référence) :** les adresses d'écoute sont générées à partir de `sshd_config` (`/run/systemd/generator/ssh.socket.d/addresses.conf`, créé par `sshd-socket-generator`), donc définir `Port` suffit. Le fichier d'unité `systemctl cat ssh.socket` affiche toujours `ListenStream=22` ; c'est normal, le fichier généré le remplace.
+- **Ubuntu 22.10 à 24.04 :** le socket peut ignorer `Port` de `sshd_config` ; définissez le port sur le socket avec un drop-in (voir « Anciennes versions » ci-dessous).
+
+Sur 26.04, gardez les deux ports pendant la migration :
+
+```bash
+sudo tee /etc/ssh/sshd_config.d/02-port.conf >/dev/null <<'CONF'
+Port 22
+Port <SSH_PORT>
+CONF
+sudo sshd -t && echo OK
+sudo systemctl daemon-reload      # le générateur relit sshd_config
+sudo systemctl restart ssh.socket
+sudo ss -tlnp | grep -E "sshd|:22 |:<SSH_PORT> "
+```
+
+Les deux ports doivent apparaître dans `ss`. Si seul le 22 est listé, le socket généré n'a pas été mis à jour : refaites `daemon-reload` et le redémarrage, ou utilisez le drop-in de « Anciennes versions ».
+
+**Anciennes versions (22.10 à 24.04) et solution de repli :**
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ssh.socket.d
@@ -114,8 +136,10 @@ ssh -p <SSH_PORT> <SERVER_USER>@<SERVER_IP>
 
 Lorsque cela fonctionne de façon répétée, supprimez le port 22 :
 
+Sur 26.04, supprimez la ligne `Port 22` de `/etc/ssh/sshd_config.d/02-port.conf` ; avec le drop-in du socket, supprimez plutôt `ListenStream=22` de `listen.conf`. Puis :
+
 ```bash
-sudo sed -i '/^ListenStream=22$/d' /etc/systemd/system/ssh.socket.d/listen.conf
+sudo sed -i '/^Port 22$/d' /etc/ssh/sshd_config.d/02-port.conf      # 26.04 (variante drop-in : modifiez listen.conf)
 sudo systemctl daemon-reload && sudo systemctl restart ssh.socket
 sudo ufw delete allow 22/tcp          # si vous l'aviez ouvert
 ```
@@ -134,7 +158,8 @@ ssh root@<SERVER_IP> -p <SSH_PORT>                     # Permission denied
 | Symptôme | Solution |
 |---|---|
 | `Permission denied (publickey)` | Sur le serveur : `chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys` ; vérifiez avec `ssh -v <SERVER_HOSTNAME>` que la bonne clé est proposée ; assurez-vous d'avoir copié le fichier `.pub` |
-| Le changement de port n'a aucun effet | `ss -tlnp` n'affiche toujours que 22 : le fichier complémentaire du socket n'a pas été appliqué ; relancez `daemon-reload` et `restart ssh.socket` |
+| Le changement de port n'a aucun effet | `ss -tlnp` n'affiche toujours que 22 : refaites `daemon-reload` et `restart ssh.socket` ; jusqu'à 24.04 le drop-in du socket est indispensable |
+| La connexion par mot de passe fonctionne encore | Un drop-in (par exemple `50-cloud-init.conf`) définit `PasswordAuthentication yes` avant votre valeur ; vérifiez `sudo grep -ri passwordauth /etc/ssh/` et `sudo sshd -T` |
 | Connexion refusée sur le nouveau port | Pas d'écoute (`ss -tlnp`) ou port bloqué : `sudo ufw status`, `sudo journalctl -u ssh -n 50` |
 | Enfermé dehors | Nécessite un accès à la console : corrigez `/etc/ssh/sshd_config.d/*` et le fichier complémentaire du socket, redémarrez `ssh.socket` |
 
