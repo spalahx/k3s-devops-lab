@@ -6,7 +6,7 @@ Installe Ubuntu Server LTS sur une machine vierge à partir d'une clé USB. Igno
 
 | Choix | Valeur |
 |---|---|
-| Distribution | Ubuntu Server (sans bureau), dernière LTS (par exemple 24.04 LTS ; LTS = 5 ans de mises à jour de sécurité) |
+| Distribution | Ubuntu Server (sans bureau), dernière LTS (par exemple 26.04 LTS ; LTS = 5 ans de mises à jour de sécurité) |
 | Architecture | `amd64` pour les machines Intel/AMD, `arm64` pour les cartes ARM. Une mauvaise architecture ne démarre pas |
 | Téléchargement | `https://ubuntu.com/download/server` (l'ISO fait environ 2 Go) |
 

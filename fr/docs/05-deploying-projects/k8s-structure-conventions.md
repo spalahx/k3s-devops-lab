@@ -15,8 +15,6 @@ Définit une organisation en deux dépôts sur le serveur : le code des projets 
 ├── system/                               # à l'échelle du cluster : réglages Traefik, supervision
 │   ├── ingress/
 │   └── monitoring/
-├── ai-models/                            # charges de travail IA isolées
-│   └── ollama/
 └── projects/
     └── <PROJECT_GROUP>/
         ├── <PROJECT_NAME>/
@@ -31,7 +29,6 @@ Définit une organisation en deux dépôts sur le serveur : le code des projets 
 |---|---|---|
 | `~/workspace/...` | Code applicatif, historique dans le Git du projet | Plusieurs fois par jour |
 | `~/k8s-infrastructure/system/` | Configuration globale au cluster, partagée par tous les projets | Rarement |
-| `~/k8s-infrastructure/ai-models/` | Charges de travail LLM locales, isolées des projets web | Rarement |
 | `~/k8s-infrastructure/projects/` | Un répertoire par projet déployé | Lors d'un changement de noms d'hôte, de ressources ou d'images |
 
 Raisons de cette séparation : le code et la configuration d'exécution évoluent à des rythmes différents, appartiennent à des dépôts et à des responsables différents, et les manifestes peuvent référencer des détails d'infrastructure (noms d'hôte, tailles de ressources) qui ne doivent pas figurer dans le dépôt de l'application.
@@ -74,13 +71,12 @@ Un namespace par projet : `kubectl create namespace <PROJECT_NAME>`. Le namespac
 | Changer le nom d'hôte, les replicas, les ressources | `~/k8s-infrastructure/projects/<PROJECT_GROUP>/<PROJECT_NAME>/app.yaml` |
 | Changer les réglages de la base | `.../db.yaml` |
 | Traefik / supervision globaux | `~/k8s-infrastructure/system/` |
-| LLM local | `~/k8s-infrastructure/ai-models/ollama/` |
 
 ## Créer le squelette
 
 ```bash
 mkdir -p ~/workspace/<PROJECT_GROUP>/<PROJECT_NAME>/k8s-local/{nginx,mysql-data}
-mkdir -p ~/k8s-infrastructure/{system/{ingress,monitoring},ai-models/ollama}
+mkdir -p ~/k8s-infrastructure/system/{ingress,monitoring}
 mkdir -p ~/k8s-infrastructure/projects/<PROJECT_GROUP>/<PROJECT_NAME>
 cd ~/k8s-infrastructure && git init
 ```

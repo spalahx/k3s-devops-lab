@@ -1,5 +1,7 @@
 # Documentation
 
+> **Status of this guide.** It documents one real home-server setup and was written from the author's notes; it has not been replayed from scratch. Chapters marked "not verified" and the page [Known differences and problems not covered](docs/99-appendix/known-differences.md) list what is known to differ. An automated, tested track is in development.
+
 Read in order. Each page ends with a link to the next one. Placeholders like `<SERVER_USER>` are listed in [Prerequisites and variables](docs/00-overview/prerequisites-and-variables.md).
 
 ## Overview
@@ -63,13 +65,13 @@ Read in order. Each page ends with a link to the next one. Placeholders like `<S
 ## Optional extras
 
 - [Samba File Storage](docs/09-optional-extras/samba-file-storage.md)
-- [Ollama in a Separate Namespace](docs/09-optional-extras/ollama-ai-namespace.md)
 
 ## Appendix
 
 - [Roadmap checklist](docs/99-appendix/roadmap-checklist.md)
 - [Troubleshooting networking (local hardware only)](docs/99-appendix/troubleshooting-networking.md)
 - [Glossary](docs/99-appendix/glossary.md)
+- [Known differences and problems not covered](docs/99-appendix/known-differences.md)
 
 Ready-to-use manifests: [examples/wordpress](examples/wordpress/).
 

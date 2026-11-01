@@ -134,4 +134,4 @@ From the laptop: create a file in the mounted drive and check it on the server w
 | Share gone after reboot | Service not enabled: `systemctl is-enabled smbd` |
 | Connection breaks when the server IP changes | Reserve the IP in the router or use netplan static addressing |
 
-Next: [Ollama in a separate namespace](ollama-ai-namespace.md)
+Next: [Glossary](../99-appendix/glossary.md)

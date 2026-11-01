@@ -31,7 +31,6 @@
 | Namespace | Partition logique d'un cluster ; les noms et quotas sont délimités par namespace |
 | netplan | Outil de configuration réseau d'Ubuntu piloté par du YAML dans `/etc/netplan/` |
 | Node | Une machine du cluster ; ici, le serveur unique |
-| Ollama | Outil qui exécute des grands modèles de langage en local |
 | Pod | Plus petite unité déployable : un ou plusieurs conteneurs partageant réseau et volumes |
 | Prometheus | Base de données de séries temporelles qui collecte et stocke les métriques |
 | Promtail | Agent qui envoie les logs des conteneurs et du système vers Loki |

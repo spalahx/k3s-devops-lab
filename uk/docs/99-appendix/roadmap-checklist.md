@@ -22,7 +22,6 @@
 - [ ] **18. CI/CD (необов'язково).** Пайплайн збирає та розгортає навчальний проєкт після push. Див. [Пайплайн GitLab CI](../07-cicd/gitlab-ci-petproject-pipeline.md).
 - [ ] **19. Моніторинг (необов'язково).** Grafana показує метрики та логи вузла й Pod. Перевірка: `helm list -A`. Див. [Основи Helm](../08-monitoring/helm-basics.md), [Prometheus і Grafana](../08-monitoring/prometheus-grafana.md), [Loki](../08-monitoring/loki-logs.md).
 - [ ] **20. Файлове сховище (необов'язково).** Спільний ресурс з іншої машини монтується через обмеженого користувача. Див. [Samba](../09-optional-extras/samba-file-storage.md).
-- [ ] **21. Локальні LLM (необов'язково).** Ollama відповідає всередині кластера з встановленими обмеженнями ресурсів. Див. [Ollama](../09-optional-extras/ollama-ai-namespace.md).
 
 Поняття: [Глосарій](glossary.md). Мережеві проблеми на локальному обладнанні: [Усунення проблем](troubleshooting-networking.md).
 

@@ -72,7 +72,7 @@ helm install loki grafana/loki \
   --wait --timeout 5m
 ```
 
-> **Warning:** If the chart version you install rejects a key above, compare with `helm show values grafana/loki`; this file targets the 6.x chart line.
+> **Warning:** If the chart version you install rejects a key above, compare with `helm show values grafana/loki`; this file was written for the 6.x chart line. The reference server runs chart 7.3.0 (Loki 3.6.12) with the same `SingleBinary` layout; still compare the keys with `helm show values grafana/loki` before installing.
 
 ## 2. Promtail
 
@@ -99,7 +99,7 @@ helm install promtail grafana/promtail \
 
 K3s uses containerd, whose logs are in the CRI format under `/var/log/pods/<namespace>_<pod>_<uid>/<container>/*.log`. The chart's default scrape config mounts `/var/log/pods` and parses the CRI format, so no path changes are needed. Adjust the mounts only if K3s runs with a custom `--data-dir` or log directory.
 
-> **Warning:** Promtail is in maintenance mode; Grafana Alloy is its successor. Promtail still works with the chart above and is the simplest option on one node.
+> **Warning:** Promtail is deprecated in favour of Grafana Alloy; check the project's status page before relying on it for a new installation. The reference server runs Loki without any log shipper, so the Promtail steps on this page were not verified on real hardware. Prefer Alloy for a new setup.
 
 ## 3. Add Loki to Grafana
 

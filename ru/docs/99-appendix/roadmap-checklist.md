@@ -22,7 +22,6 @@
 - [ ] **18. CI/CD (опционально).** Пайплайн собирает и деплоит пет-проект при push. См. [Пайплайн GitLab CI](../07-cicd/gitlab-ci-petproject-pipeline.md).
 - [ ] **19. Мониторинг (опционально).** Grafana показывает метрики узла и Pod, а также логи. Проверка: `helm list -A`. См. [Основы Helm](../08-monitoring/helm-basics.md), [Prometheus и Grafana](../08-monitoring/prometheus-grafana.md), [Loki](../08-monitoring/loki-logs.md).
 - [ ] **20. Файловое хранилище (опционально).** Шара монтируется с другой машины под ограниченным пользователем. См. [Samba](../09-optional-extras/samba-file-storage.md).
-- [ ] **21. Локальные LLM (опционально).** Ollama отвечает внутри кластера, лимиты ресурсов заданы. См. [Ollama](../09-optional-extras/ollama-ai-namespace.md).
 
 Термины: [Глоссарий](glossary.md). Проблемы сети на локальном железе: [Диагностика](troubleshooting-networking.md).
 

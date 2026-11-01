@@ -15,7 +15,7 @@ La même pile fonctionne sur un mini-PC à domicile ou sur un VPS dans le cloud.
 | DNS et domaines | Entrées `/etc/hosts` ou DNS local (noms `*.local`) | Vrais enregistrements DNS A pointant vers l'IP du VPS ; certificats TLS possibles |
 | Énergie et coût | Achat du matériel, électricité, onduleur optionnel ; fonctionne 24h/24 à faible consommation | Abonnement mensuel selon CPU/RAM ; pas de matériel |
 | Risque d'exposition | Faible tant que des ports ne sont pas redirigés | Élevé dès la première minute : des robots scannent les nouvelles IP, sécurisez avant toute autre chose |
-| Ressources | Fixées par votre matériel | Redimensionnables ; les LLM locaux sont généralement trop coûteux |
+| Ressources | Fixées par votre matériel | Redimensionnables |
 
 ## Quoi ignorer ou adapter
 
@@ -29,7 +29,6 @@ La même pile fonctionne sur un mini-PC à domicile ou sur un VPS dans le cloud.
 | [Passerelle VPS](../06-remote-access/vps-gateway-setup.md), [tunnel inverse](../06-remote-access/reverse-ssh-tunnel-systemd.md), [ProxyJump](../06-remote-access/proxyjump-client-config.md) | Nécessaires pour l'accès depuis l'extérieur du LAN | À ignorer, sauf ProxyJump si vous ajoutez un nœud privé derrière le VPS |
 | [Supervision](../08-monitoring/helm-basics.md) | À suivre | À suivre ; surveillez la mémoire sur les petites offres |
 | [Samba](../09-optional-extras/samba-file-storage.md) | LAN uniquement | N'exposez pas SMB sur Internet ; ignorez ou tunnelisez via SSH |
-| [Ollama](../09-optional-extras/ollama-ai-namespace.md) | Dépend de la RAM | Nécessite une grande offre ; souvent ignoré |
 | [Dépannage réseau](../99-appendix/troubleshooting-networking.md) | S'applique | Sans objet |
 
 > **Avertissement :** sur un VPS, ne fermez pas votre unique session SSH pendant que vous modifiez le port SSH ou les règles UFW. Ouvrez une seconde session et testez les nouveaux paramètres avant de vous déconnecter ; la récupération passe par la console web du fournisseur.

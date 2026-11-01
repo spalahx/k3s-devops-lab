@@ -1,5 +1,7 @@
 # Reverse SSH Tunnel as a systemd Service
 
+> **Status: not verified on real hardware.** The reference server this guide was checked against has no reverse tunnel service and no VPS gateway, so the steps on this page were written from documentation and have not been run end to end. Treat the commands as a starting point and verify each one.
+
 Keeps a permanent outbound SSH connection from the home server to the VPS, publishing the home SSH port as `127.0.0.1:<TUNNEL_PORT>` on the VPS. Requires the [VPS gateway](vps-gateway-setup.md) with the tunnel user and key.
 
 ## 1. Test manually

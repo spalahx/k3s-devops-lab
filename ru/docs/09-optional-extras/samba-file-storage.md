@@ -134,4 +134,4 @@ smbclient -L localhost -U <SERVER_USER>
 | Ресурс пропал после перезагрузки | Служба не включена: `systemctl is-enabled smbd` |
 | Подключение ломается при смене IP сервера | Зарезервируйте IP в роутере или используйте статику через netplan |
 
-Next: [Ollama в отдельном namespace](ollama-ai-namespace.md)
+Next: [Глоссарий](../99-appendix/glossary.md)

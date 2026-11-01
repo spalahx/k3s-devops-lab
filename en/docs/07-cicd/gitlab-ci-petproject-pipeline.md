@@ -1,5 +1,7 @@
 # GitLab CI Pipeline: Build and Deploy to K3s
 
+> **Status: not verified on real hardware.** The reference server this guide was checked against has no GitLab Runner installed, so the pipeline on this page has not been run end to end. Treat the commands as a starting point and verify each one.
+
 Sets up a self-hosted GitLab Runner on the server and a `.gitlab-ci.yml` that builds a Docker image, pushes it to the GitLab Container Registry, and rolls it out to an existing K3s Deployment on every push to `main`. Use a throwaway project first. Skip the self-hosted runner if the shared runners of gitlab.com are sufficient and the cluster is reachable from them (it usually is not, on a home network).
 
 Prerequisites: a working [K3s](../03-containers-and-k3s/k3s-install.md) with the app Deployment already created once by hand (see [deployment walkthrough](../05-deploying-projects/generic-deployment-walkthrough.md)), and [Docker](../03-containers-and-k3s/docker-install.md) on the server. The pipeline only updates the image; it does not create manifests.
@@ -166,7 +168,7 @@ build:
 deploy:
   stage: deploy
   image:
-    name: alpine/k8s:1.30.4
+    name: alpine/k8s:<KUBECTL_VERSION>
     entrypoint: [""]
   tags: [k3s]
   script:
@@ -182,7 +184,7 @@ deploy:
 | `docker:27-dind` | Docker-in-Docker service so the job can run `docker build` |
 | `DOCKER_TLS_CERTDIR` | Makes the client and the dind daemon share TLS certificates; omitting it gives `Cannot connect to the Docker daemon` |
 | `$CI_REGISTRY_*` | Predefined; the job token logs in to the project's registry automatically |
-| `alpine/k8s` | Image with `kubectl` and a shell; pin the tag to match the cluster version |
+| `alpine/k8s:<KUBECTL_VERSION>` | Image with `kubectl` and a shell. `kubectl` may differ from the cluster by at most one minor version, so pick the tag from the cluster: `kubectl version` prints the server version (for example `v1.36.4` means a `1.36.x` tag). Pin the exact tag, not `latest` |
 | Namespace | Taken from the kubeconfig context, so no `-n` is needed |
 
 ## Verify

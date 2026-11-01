@@ -15,8 +15,6 @@
 ├── system/                               # на рівні кластера: налаштування Traefik, моніторинг
 │   ├── ingress/
 │   └── monitoring/
-├── ai-models/                            # ізольовані AI-навантаження
-│   └── ollama/
 └── projects/
     └── <PROJECT_GROUP>/
         ├── <PROJECT_NAME>/
@@ -31,7 +29,6 @@
 |---|---|---|
 | `~/workspace/...` | Код застосунку, історія в Git проєкту | Багато разів на день |
 | `~/k8s-infrastructure/system/` | Конфігурація кластера, спільна для всіх проєктів | Рідко |
-| `~/k8s-infrastructure/ai-models/` | Локальні LLM-навантаження, ізольовані від веб-проєктів | Рідко |
 | `~/k8s-infrastructure/projects/` | По одному каталогу на кожен розгорнутий проєкт | Коли змінюються імена хостів, ресурси або образи |
 
 Причини розділення: код і конфігурація середовища виконання змінюються з різною швидкістю, належать різним репозиторіям і власникам, а маніфести можуть містити деталі інфраструктури (імена хостів, розміри ресурсів), яким не місце в репозиторії застосунку.
@@ -74,13 +71,12 @@ Kubernetes обробляє всі варіанти однаково. Готов
 | Зміна імені хоста, реплік, ресурсів | `~/k8s-infrastructure/projects/<PROJECT_GROUP>/<PROJECT_NAME>/app.yaml` |
 | Зміна налаштувань БД | `.../db.yaml` |
 | Глобальні Traefik / моніторинг | `~/k8s-infrastructure/system/` |
-| Локальна LLM | `~/k8s-infrastructure/ai-models/ollama/` |
 
 ## Створення структури
 
 ```bash
 mkdir -p ~/workspace/<PROJECT_GROUP>/<PROJECT_NAME>/k8s-local/{nginx,mysql-data}
-mkdir -p ~/k8s-infrastructure/{system/{ingress,monitoring},ai-models/ollama}
+mkdir -p ~/k8s-infrastructure/system/{ingress,monitoring}
 mkdir -p ~/k8s-infrastructure/projects/<PROJECT_GROUP>/<PROJECT_NAME>
 cd ~/k8s-infrastructure && git init
 ```

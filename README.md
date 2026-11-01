@@ -27,7 +27,6 @@ flowchart LR
             I --> A["project-a<br/>app + db"]
             I --> B["project-b<br/>app + db"]
             I --> M["monitoring<br/>Prometheus, Grafana, Loki"]
-            O["ai-models<br/>Ollama"]
         end
     end
 ```
@@ -40,7 +39,7 @@ flowchart LR
 - **Close to production.** Same containers, ingress and manifests as in a real Kubernetes cluster, not a pile of `docker-compose` files.
 - **Cheap.** A used mini-PC pays for itself against a month or two of equivalent cloud VMs, and there is no bill for idle time.
 - **Access from anywhere.** A small VPS with a public IP forwards SSH to the box behind your home router.
-- **Room to experiment.** Helm, Prometheus/Grafana/Loki, local LLMs via Ollama: break things without touching anything that matters.
+- **Room to experiment.** Helm, Prometheus/Grafana/Loki: break things without touching anything that matters.
 - **Clean laptop.** No local PHP/Node/MySQL versions fighting each other.
 
 ## What's inside
@@ -55,7 +54,11 @@ flowchart LR
 | Remote access | VPS gateway, reverse SSH tunnel, ProxyJump |
 | CI/CD | GitLab Runner and a pipeline that deploys into K3s |
 | Monitoring | Helm, Prometheus + Grafana, Loki |
-| Extras | Samba file share, Ollama in its own namespace |
+| Extras | Samba file share |
+
+## Status
+
+The manual guide documents one real home-server setup and was written from the author's notes; it has not been replayed from scratch. See [known differences and problems not covered](en/docs/99-appendix/known-differences.md). An automated, tested version for AWS is in development.
 
 ## Start here
 

@@ -63,7 +63,6 @@
 ## Дополнительно
 
 - [Samba: сетевое файловое хранилище](docs/09-optional-extras/samba-file-storage.md)
-- [Ollama в отдельном namespace](docs/09-optional-extras/ollama-ai-namespace.md)
 
 ## Приложения
 

@@ -37,16 +37,18 @@ sudo ufw allow 80/tcp comment 'HTTP'
 sudo ufw allow 443/tcp comment 'HTTPS'
 ```
 
-LAN-only alternative for a home server that should not be reachable from outside the subnet:
+LAN-only variant (it restricts services that run on the host itself, but not Traefik; see the note below):
 
 ```bash
 sudo ufw allow from 192.168.1.0/24 to any port 80 proto tcp
 sudo ufw allow from 192.168.1.0/24 to any port 443 proto tcp
 ```
 
+> **Note:** UFW rules for 80/443 do **not** control access to Traefik. K3s publishes these ports with DNAT in the NAT table and forwards the traffic to the Traefik pod, so it takes the FORWARD path, and K3s places its own chains before UFW's. On the reference server (K3s v1.36, UFW with deny incoming and deny routed, no rule for port 80) Traefik answered from another host on the LAN. To limit who can reach Traefik, use the router firewall (or the cloud security group), not UFW.
+
 ## 4. K3s rules
 
-On a single-node cluster nothing but 80/443 is needed from outside. Pods and services, however, talk through the node's own interfaces (`cni0`, `flannel.1`), and UFW's default policy drops that traffic. Allow the K3s pod and service networks (default CIDRs) explicitly:
+On a single-node cluster nothing but 80/443 is needed from outside. Pods and services talk through the node's own interfaces (`cni0`, `flannel.1`), and UFW's default policy can drop that traffic. On the reference server the cluster ran without any rule for the pod and service networks, because K3s places its forwarding chains ahead of UFW's. Keep the two rules below as a fallback: add them if pods lose DNS or internet access after `ufw enable`. Default CIDRs:
 
 ```bash
 sudo ufw allow from 10.42.0.0/16 to any comment 'K3s pods'
@@ -85,7 +87,7 @@ Delete by rule text, or by number from `status numbered` (numbers shift after ea
 ## Gotchas
 
 - **Docker bypasses UFW.** Ports published with `docker run -p 8080:80` are inserted into iptables ahead of UFW, so `ufw deny` does not hide them. Bind to localhost (`-p 127.0.0.1:8080:80`) or do not publish the port.
-- **K3s adds its own iptables rules** (service load balancer for Traefik, kube-proxy NAT). Ports 80/443 reach Traefik through DNAT in the forward path; if after enabling UFW the sites time out while `curl localhost` works on the server, check `sudo ufw status` for the pod/service CIDR rules above and, if needed, set `DEFAULT_FORWARD_POLICY="ACCEPT"` in `/etc/default/ufw`, then `sudo ufw reload`.
+- **K3s adds its own iptables rules** (service load balancer for Traefik, kube-proxy NAT). Ports 80/443 reach Traefik through DNAT in the forward path, independent of UFW's input rules. If after enabling UFW the sites time out while `curl localhost` works on the server, add the pod/service CIDR rules above and, if needed, set `DEFAULT_FORWARD_POLICY="ACCEPT"` in `/etc/default/ufw`, then `sudo ufw reload`. The reference server ran with `DROP` and no extra rules.
 - **Pods cannot resolve DNS / reach the internet after `ufw enable`:** the pod CIDR rule above is missing. `kubectl run -it --rm t --image=busybox --restart=Never -- nslookup kubernetes.default` is a quick test.
 - **Order matters:** `ufw allow` before `ufw enable`, and the SSH port rule before changing the SSH port.
 - **Other services need their own rules:** for example `sudo ufw allow samba` ([Samba](../09-optional-extras/samba-file-storage.md)), restricted to the LAN subnet.

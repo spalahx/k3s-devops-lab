@@ -22,7 +22,6 @@ Toutes les étapes dans l'ordre. Une étape est terminée lorsque sa vérificati
 - [ ] **18. CI/CD (facultatif).** Le pipeline construit et déploie un projet perso à chaque push. Voir [Pipeline GitLab CI](../07-cicd/gitlab-ci-petproject-pipeline.md).
 - [ ] **19. Supervision (facultatif).** Grafana affiche les métriques et les logs des nœuds et des Pods. Vérification : `helm list -A`. Voir [Bases de Helm](../08-monitoring/helm-basics.md), [Prometheus et Grafana](../08-monitoring/prometheus-grafana.md), [Loki](../08-monitoring/loki-logs.md).
 - [ ] **20. Stockage de fichiers (facultatif).** Partager des montages depuis une autre machine avec un utilisateur restreint. Voir [Samba](../09-optional-extras/samba-file-storage.md).
-- [ ] **21. LLM locaux (facultatif).** Ollama répond dans le cluster avec des limites de ressources définies. Voir [Ollama](../09-optional-extras/ollama-ai-namespace.md).
 
 Concepts : [Glossaire](glossary.md). Problèmes réseau sur matériel local : [Dépannage](troubleshooting-networking.md).
 

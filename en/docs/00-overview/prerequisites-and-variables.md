@@ -10,7 +10,6 @@ Hardware, software and accounts needed before starting, and every placeholder us
 | RAM | 4 GB (K3s alone about 1 GB) | 16 GB+ (several projects, monitoring) |
 | Disk | 40 GB SSD | 250 GB+ SSD |
 | Network | Wired Ethernet | Wired Ethernet, router with DHCP reservation |
-| Local LLMs (optional) | 16 GB RAM | 32 GB+ RAM or a supported GPU |
 
 Prefer Ethernet over Wi-Fi for a server (see [Network troubleshooting](../99-appendix/troubleshooting-networking.md)).
 
@@ -29,7 +28,7 @@ Prefer Ethernet over Wi-Fi for a server (see [Network troubleshooting](../99-app
 | `<SERVER_HOSTNAME>` | Server hostname | `devbox` |
 | `<SERVER_IP>` | Server address on the LAN (or public IP of a VPS) | `192.168.1.50` |
 | `<SSH_PORT>` | Custom SSH port chosen during hardening | `2222` |
-| `<DOMAIN_BASE>` | Base domain or local suffix for project hostnames | `devbox.local`, `example.com` |
+| `<DOMAIN_BASE>` | Base domain or local suffix for project hostnames | `devbox.test`, `example.com` |
 | `<PROJECT_NAME>` | Short lowercase project name, used for folder, namespace and hostname | `blog` |
 | `<VPS_IP>` | Public IP of the gateway VPS | `203.0.113.10` |
 | `<GIT_WORK_EMAIL>` | E-mail for work commits | `me@work.example` |
@@ -43,6 +42,7 @@ Prefer Ethernet over Wi-Fi for a server (see [Network troubleshooting](../99-app
 | `<VPS_USER>` | Admin user on the gateway VPS | `admin` |
 | `<TUNNEL_USER>`, `<TUNNEL_PORT>` | Restricted user on the VPS and the port the tunnel listens on | `tunnel`, `2200` |
 | `<GRAFANA_ADMIN_PASSWORD>`, `<SAMBA_PASSWORD>` | Passwords you generate | not stored in the repo |
+| `<KUBECTL_VERSION>` | Tag of the `alpine/k8s` image used in CI; must be within one minor version of the cluster (`kubectl version`) | `1.36.4` |
 
 Naming rules: `<PROJECT_NAME>` must be a valid Kubernetes name (lowercase letters, digits, `-`). Keep it identical in the code directory, manifest directory, namespace and hostname.
 

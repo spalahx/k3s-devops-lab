@@ -15,8 +15,6 @@ Defines a two-repository layout on the server: project code in `~/workspace`, Ku
 ├── system/                               # cluster-wide: Traefik settings, monitoring
 │   ├── ingress/
 │   └── monitoring/
-├── ai-models/                            # isolated AI workloads
-│   └── ollama/
 └── projects/
     └── <PROJECT_GROUP>/
         ├── <PROJECT_NAME>/
@@ -31,7 +29,6 @@ Defines a two-repository layout on the server: project code in `~/workspace`, Ku
 |---|---|---|
 | `~/workspace/...` | Application code, history in the project's Git | Many times a day |
 | `~/k8s-infrastructure/system/` | Cluster-wide config shared by every project | Rarely |
-| `~/k8s-infrastructure/ai-models/` | Local LLM workloads, isolated from web projects | Rarely |
 | `~/k8s-infrastructure/projects/` | One directory per deployed project | When hostnames, resources or images change |
 
 Reasons for the split: code and runtime config change at different speeds, belong to different repos and owners, and manifests may reference infrastructure details (hostnames, resource sizes) that should not live in the application repo.
@@ -74,13 +71,12 @@ One namespace per project: `kubectl create namespace <PROJECT_NAME>`. The namesp
 | Change hostname, replicas, resources | `~/k8s-infrastructure/projects/<PROJECT_GROUP>/<PROJECT_NAME>/app.yaml` |
 | Change DB settings | `.../db.yaml` |
 | Global Traefik / monitoring | `~/k8s-infrastructure/system/` |
-| Local LLM | `~/k8s-infrastructure/ai-models/ollama/` |
 
 ## Create the skeleton
 
 ```bash
 mkdir -p ~/workspace/<PROJECT_GROUP>/<PROJECT_NAME>/k8s-local/{nginx,mysql-data}
-mkdir -p ~/k8s-infrastructure/{system/{ingress,monitoring},ai-models/ollama}
+mkdir -p ~/k8s-infrastructure/system/{ingress,monitoring}
 mkdir -p ~/k8s-infrastructure/projects/<PROJECT_GROUP>/<PROJECT_NAME>
 cd ~/k8s-infrastructure && git init
 ```

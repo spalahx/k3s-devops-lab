@@ -1,5 +1,7 @@
 # Конвеєр GitLab CI: збірка та розгортання в K3s
 
+> **Статус: не перевірено на реальному обладнанні.** На еталонному сервері, з яким звірялася ця інструкція, не встановлено GitLab Runner, тому конвеєр на цій сторінці не проходився від початку до кінця. Сприймайте команди як відправну точку і перевіряйте кожну.
+
 Налаштовує self-hosted GitLab Runner на сервері та `.gitlab-ci.yml`, який збирає образ Docker, надсилає його в GitLab Container Registry і викочує в наявний Deployment K3s після кожного push у `main`. Спершу скористайтеся тестовим проєктом. Пропустіть self-hosted runner, якщо спільних runner'ів gitlab.com достатньо і кластер для них доступний (у домашній мережі зазвичай ні).
 
 Передумови: робочий [K3s](../03-containers-and-k3s/k3s-install.md) із Deployment застосунку, один раз створеним вручну (див. [покрокове розгортання](../05-deploying-projects/generic-deployment-walkthrough.md)), та [Docker](../03-containers-and-k3s/docker-install.md) на сервері. Конвеєр лише оновлює образ; маніфести він не створює.
@@ -166,7 +168,7 @@ build:
 deploy:
   stage: deploy
   image:
-    name: alpine/k8s:1.30.4
+    name: alpine/k8s:<KUBECTL_VERSION>
     entrypoint: [""]
   tags: [k3s]
   script:
@@ -182,7 +184,7 @@ deploy:
 | `docker:27-dind` | Сервіс Docker-in-Docker, щоб завдання могло виконувати `docker build` |
 | `DOCKER_TLS_CERTDIR` | Змушує клієнт і демон dind використовувати спільні TLS-сертифікати; без нього виникає `Cannot connect to the Docker daemon` |
 | `$CI_REGISTRY_*` | Попередньо визначені; токен завдання автоматично авторизується в registry проєкту |
-| `alpine/k8s` | Образ з `kubectl` і оболонкою; зафіксуйте тег відповідно до версії кластера |
+| `alpine/k8s:<KUBECTL_VERSION>` | Образ із `kubectl` і оболонкою. `kubectl` може відрізнятися від кластера не більше ніж на одну мінорну версію, тому беріть тег за кластером: `kubectl version` показує версію сервера (наприклад, `v1.36.4` означає тег `1.36.x`). Закріплюйте точний тег, не `latest` |
 | Namespace | Береться з контексту kubeconfig, тому `-n` не потрібен |
 
 ## Перевірка

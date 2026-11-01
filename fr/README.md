@@ -62,7 +62,6 @@
 
 ## Extras facultatifs
 
-- [Ollama dans un namespace dédié](docs/09-optional-extras/ollama-ai-namespace.md)
 - [Stockage de fichiers Samba](docs/09-optional-extras/samba-file-storage.md)
 
 ## Annexes

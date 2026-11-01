@@ -1,5 +1,7 @@
 # Pipeline GitLab CI : build et déploiement sur K3s
 
+> **Statut : non vérifié sur du matériel réel.** Le serveur de référence avec lequel ce guide a été vérifié n'a pas de GitLab Runner installé ; le pipeline de cette page n'a donc pas été exécuté de bout en bout. Considérez les commandes comme un point de départ et vérifiez chacune d'elles.
+
 Met en place un GitLab Runner auto-hébergé sur le serveur et un `.gitlab-ci.yml` qui construit une image Docker, la pousse vers le GitLab Container Registry et la déploie sur un Deployment K3s existant à chaque push sur `main`. Utilisez d'abord un projet jetable. Ignorez le runner auto-hébergé si les runners partagés de gitlab.com suffisent et que le cluster leur est accessible (ce n'est généralement pas le cas sur un réseau domestique).
 
 Prérequis : un [K3s](../03-containers-and-k3s/k3s-install.md) fonctionnel avec le Deployment de l'application déjà créé une fois à la main (voir le [guide de déploiement](../05-deploying-projects/generic-deployment-walkthrough.md)), et [Docker](../03-containers-and-k3s/docker-install.md) sur le serveur. Le pipeline ne fait que mettre à jour l'image ; il ne crée pas de manifestes.
@@ -166,7 +168,7 @@ build:
 deploy:
   stage: deploy
   image:
-    name: alpine/k8s:1.30.4
+    name: alpine/k8s:<KUBECTL_VERSION>
     entrypoint: [""]
   tags: [k3s]
   script:
@@ -182,7 +184,7 @@ deploy:
 | `docker:27-dind` | Service Docker-in-Docker pour que le job puisse exécuter `docker build` |
 | `DOCKER_TLS_CERTDIR` | Fait partager les certificats TLS entre le client et le démon dind ; l'omettre provoque `Cannot connect to the Docker daemon` |
 | `$CI_REGISTRY_*` | Prédéfinis ; le jeton du job se connecte automatiquement au registre du projet |
-| `alpine/k8s` | Image avec `kubectl` et un shell ; épinglez le tag pour qu'il corresponde à la version du cluster |
+| `alpine/k8s:<KUBECTL_VERSION>` | Image avec `kubectl` et un shell. `kubectl` peut différer du cluster d'une version mineure au plus ; choisissez donc le tag d'après le cluster : `kubectl version` affiche la version du serveur (par exemple `v1.36.4` correspond à un tag `1.36.x`). Épinglez le tag exact, pas `latest` |
 | Namespace | Pris dans le contexte du kubeconfig, donc `-n` n'est pas nécessaire |
 
 ## Vérification

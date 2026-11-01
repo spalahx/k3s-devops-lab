@@ -63,7 +63,6 @@
 ## Додатково
 
 - [Файлове сховище Samba](docs/09-optional-extras/samba-file-storage.md)
-- [Ollama в окремому namespace](docs/09-optional-extras/ollama-ai-namespace.md)
 
 ## Додатки
 

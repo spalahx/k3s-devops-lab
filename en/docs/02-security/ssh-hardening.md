@@ -61,6 +61,8 @@ ssh <SERVER_HOSTNAME>
 
 Ubuntu reads drop-in files from `/etc/ssh/sshd_config.d/`, and the first value wins, so a drop-in prefixed `01-` overrides cloud-image defaults (`50-cloud-init.conf` may set `PasswordAuthentication yes`).
 
+> **Warning:** do not put these lines into the main `/etc/ssh/sshd_config` instead. The `Include` of `sshd_config.d/*.conf` sits above them, so a `PasswordAuthentication yes` from `50-cloud-init.conf` still wins and password login stays enabled even though the main file says `no`. Always confirm with `sudo sshd -T` (below).
+
 ```bash
 sudo tee /etc/ssh/sshd_config.d/01-hardening.conf >/dev/null <<'CONF'
 PasswordAuthentication no
@@ -87,7 +89,27 @@ Choose a free port above 1024 (for example `2222`). Apply in this order:
 3. Test the new port from a second terminal.
 4. Only then remove port 22.
 
-On Ubuntu 22.10+ (including 24.04) SSH is started by **socket activation**: `ssh.socket` owns the listening port and, depending on the release, ignores `Port` in `sshd_config`. Set the port on the socket:
+SSH on Ubuntu is started by **socket activation**: `ssh.socket` owns the listening port. How the port is chosen depends on the release:
+
+- **Ubuntu 26.04 (checked on a reference server):** the listening addresses are generated from `sshd_config` (`/run/systemd/generator/ssh.socket.d/addresses.conf`, created by `sshd-socket-generator`), so setting `Port` is enough. The unit file `systemctl cat ssh.socket` still shows `ListenStream=22`; that is expected and is overridden by the generated file.
+- **Ubuntu 22.10 to 24.04:** the socket may ignore `Port` in `sshd_config`; set the port on the socket with a drop-in (see "Older releases" below).
+
+On 26.04, keep both ports during the migration:
+
+```bash
+sudo tee /etc/ssh/sshd_config.d/02-port.conf >/dev/null <<'CONF'
+Port 22
+Port <SSH_PORT>
+CONF
+sudo sshd -t && echo OK
+sudo systemctl daemon-reload      # the generator re-reads sshd_config
+sudo systemctl restart ssh.socket
+sudo ss -tlnp | grep -E "sshd|:22 |:<SSH_PORT> "
+```
+
+Both ports must show up in `ss`. If only 22 is listed, the generated socket was not refreshed: repeat `daemon-reload` and the restart, or use the drop-in from "Older releases".
+
+**Older releases (22.10 to 24.04) and as a fallback:**
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ssh.socket.d
@@ -114,8 +136,10 @@ ssh -p <SSH_PORT> <SERVER_USER>@<SERVER_IP>
 
 When it works repeatedly, drop port 22:
 
+On 26.04 remove the `Port 22` line from `/etc/ssh/sshd_config.d/02-port.conf`; with the socket drop-in remove `ListenStream=22` from `listen.conf` instead. Then:
+
 ```bash
-sudo sed -i '/^ListenStream=22$/d' /etc/systemd/system/ssh.socket.d/listen.conf
+sudo sed -i '/^Port 22$/d' /etc/ssh/sshd_config.d/02-port.conf      # 26.04 (drop-in variant: edit listen.conf)
 sudo systemctl daemon-reload && sudo systemctl restart ssh.socket
 sudo ufw delete allow 22/tcp          # if you had opened it
 ```
@@ -134,7 +158,8 @@ ssh root@<SERVER_IP> -p <SSH_PORT>                     # Permission denied
 | Symptom | Fix |
 |---|---|
 | `Permission denied (publickey)` | On the server: `chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys`; check with `ssh -v <SERVER_HOSTNAME>` that the right key is offered; ensure you copied the `.pub` file |
-| Port change has no effect | `ss -tlnp` still shows only 22: the socket drop-in was not applied; re-run `daemon-reload` and `restart ssh.socket` |
+| Port change has no effect | `ss -tlnp` still shows only 22: re-run `daemon-reload` and `restart ssh.socket`; on releases up to 24.04 the socket drop-in is required |
+| Password login still works | A drop-in (for example `50-cloud-init.conf`) sets `PasswordAuthentication yes` before your setting; check `sudo grep -ri passwordauth /etc/ssh/` and `sudo sshd -T` |
 | Connection refused on new port | Not listening (`ss -tlnp`) or blocked: `sudo ufw status`, `sudo journalctl -u ssh -n 50` |
 | Locked out | Needs console access: fix `/etc/ssh/sshd_config.d/*` and the socket drop-in, restart `ssh.socket` |
 

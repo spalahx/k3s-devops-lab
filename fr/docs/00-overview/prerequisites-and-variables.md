@@ -10,7 +10,6 @@ Matériel, logiciels et comptes nécessaires avant de commencer, et chaque espac
 | RAM | 4 Go (K3s seul environ 1 Go) | 16 Go ou plus (plusieurs projets, supervision) |
 | Disque | SSD de 40 Go | SSD de 250 Go ou plus |
 | Réseau | Ethernet filaire | Ethernet filaire, routeur avec réservation DHCP |
-| LLM locaux (optionnel) | 16 Go de RAM | 32 Go de RAM ou plus, ou un GPU compatible |
 
 Préférez l'Ethernet au Wi-Fi pour un serveur (voir [Dépannage réseau](../99-appendix/troubleshooting-networking.md)).
 
@@ -29,7 +28,7 @@ Préférez l'Ethernet au Wi-Fi pour un serveur (voir [Dépannage réseau](../99-
 | `<SERVER_HOSTNAME>` | Nom d'hôte du serveur | `devbox` |
 | `<SERVER_IP>` | Adresse du serveur sur le LAN (ou IP publique d'un VPS) | `192.168.1.50` |
 | `<SSH_PORT>` | Port SSH personnalisé choisi lors du renforcement | `2222` |
-| `<DOMAIN_BASE>` | Domaine de base ou suffixe local pour les noms d'hôte des projets | `devbox.local`, `example.com` |
+| `<DOMAIN_BASE>` | Domaine de base ou suffixe local pour les noms d'hôte des projets | `devbox.test`, `example.com` |
 | `<PROJECT_NAME>` | Nom de projet court en minuscules, utilisé pour le dossier, le namespace et le nom d'hôte | `blog` |
 | `<VPS_IP>` | IP publique du VPS passerelle | `203.0.113.10` |
 | `<GIT_WORK_EMAIL>` | E-mail pour les commits professionnels | `me@work.example` |
@@ -43,6 +42,7 @@ Préférez l'Ethernet au Wi-Fi pour un serveur (voir [Dépannage réseau](../99-
 | `<VPS_USER>` | Utilisateur administrateur sur le VPS passerelle | `admin` |
 | `<TUNNEL_USER>`, `<TUNNEL_PORT>` | Utilisateur restreint sur le VPS et port sur lequel le tunnel écoute | `tunnel`, `2200` |
 | `<GRAFANA_ADMIN_PASSWORD>`, `<SAMBA_PASSWORD>` | Mots de passe que vous générez | non stockés dans le dépôt |
+| `<KUBECTL_VERSION>` | Tag de l'image `alpine/k8s` utilisée en CI ; à une version mineure près de celle du cluster (`kubectl version`) | `1.36.4` |
 
 Règles de nommage : `<PROJECT_NAME>` doit être un nom Kubernetes valide (lettres minuscules, chiffres, `-`). Gardez-le identique dans le répertoire de code, le répertoire des manifestes, le namespace et le nom d'hôte.
 

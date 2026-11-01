@@ -1,5 +1,7 @@
 # Configuration client ProxyJump
 
+> **Statut : non vérifié sur du matériel réel.** Le serveur de référence avec lequel ce guide a été vérifié n'a ni service de tunnel inversé ni passerelle VPS ; les étapes de cette page ont donc été écrites d'après la documentation et n'ont pas été exécutées de bout en bout. Considérez les commandes comme un point de départ et vérifiez chacune d'elles.
+
 Configure `~/.ssh/config` sur le portable afin qu'un seul alias, `ssh home-server`, fonctionne aussi bien sur le réseau local (connexion directe) qu'à distance (via le VPS et le tunnel inverse). Nécessite que le [tunnel inverse](reverse-ssh-tunnel-systemd.md) soit actif. `ProxyJump` (`-J`) indique au client SSH d'ouvrir une connexion vers un hôte intermédiaire et d'y faire transiter la connexion réelle.
 
 ## 1. Entrées pour l'accès à distance

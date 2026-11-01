@@ -1,5 +1,7 @@
 # VPS Gateway Setup
 
+> **Status: not verified on real hardware.** The reference server this guide was checked against has no reverse tunnel service and no VPS gateway, so the steps on this page were written from documentation and have not been run end to end. Treat the commands as a starting point and verify each one.
+
 Prepares a small rented VPS with a static public IP that acts as a rendezvous point for a home server behind NAT or a dynamic IP. Skip this if the server already has a public static IP (for example, a cloud VPS), or if a VPN such as WireGuard/Tailscale is preferred.
 
 How it works: the home server opens an outbound SSH connection to the VPS and publishes its own SSH port on the VPS (`ssh -R`). Clients connect to the VPS, which forwards the traffic back through that connection. No router port forwarding is needed, and the home IP can change.
