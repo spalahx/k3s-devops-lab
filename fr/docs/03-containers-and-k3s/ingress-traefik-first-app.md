@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: nginx:stable
+        image: nginx:1.30.6
         ports:
         - containerPort: 80
 ---
