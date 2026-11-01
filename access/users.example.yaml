@@ -1,0 +1,15 @@
+# Copy to access/users.yaml and edit. The real file is not committed.
+# One source of truth for people and their rights (D-015); used from stage 9.
+groups:
+  admins:
+    description: Full access to the lab
+  developers:
+    description: Own namespace, no cluster-wide rights
+users:
+  - name: alice
+    groups: [admins]
+    ssh_public_keys: []
+  - name: bob
+    groups: [developers]
+    namespaces: [bob]
+    ssh_public_keys: []

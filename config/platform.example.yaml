@@ -1,0 +1,9 @@
+# Copy to config/platform.yaml and edit. The real file is not committed.
+target: aws                 # aws now; home and local arrive in v3, gcp in v4
+profile: minimal            # minimal | standard | full  (memory needs are measured in stage 10)
+region: us-east-1           # cheapest region allowed by your account (D-032); check before use
+access:
+  mode: ssm-tunnel          # no domain needed; UIs open on *.lab.localhost through an SSM tunnel (D-026)
+tls: internal               # internal | none
+modules:                    # one line per module; contract in platform/gitops/modules/_template
+  - demo-projects
