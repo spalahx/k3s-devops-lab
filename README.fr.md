@@ -27,7 +27,6 @@ flowchart LR
             I --> A["project-a<br/>app + base"]
             I --> B["project-b<br/>app + base"]
             I --> M["monitoring<br/>Prometheus, Grafana, Loki"]
-            O["ai-models<br/>Ollama"]
         end
     end
 ```
@@ -40,7 +39,7 @@ flowchart LR
 - **Proche de la production.** Mêmes conteneurs, même ingress et mêmes manifestes qu'un vrai cluster Kubernetes, pas un tas de fichiers `docker-compose`.
 - **Économique.** Un mini-PC d'occasion est amorti en quelques mois de location de machines cloud équivalentes, et on ne paie pas les périodes d'inactivité.
 - **Accès de partout.** Un petit VPS avec IP publique relaie le SSH vers la machine située derrière votre box.
-- **Terrain d'expérimentation.** Helm, Prometheus/Grafana/Loki, LLM locaux avec Ollama : on peut tout casser sans rien risquer d'important.
+- **Terrain d'expérimentation.** Helm, Prometheus/Grafana/Loki : on peut tout casser sans rien risquer d'important.
 - **Portable propre.** Plus de conflits entre versions locales de PHP, Node et MySQL.
 
 ## Contenu
@@ -55,7 +54,7 @@ flowchart LR
 | Accès distant | Passerelle VPS, tunnel SSH inverse, ProxyJump |
 | CI/CD | GitLab Runner et pipeline de déploiement dans K3s |
 | Supervision | Helm, Prometheus + Grafana, Loki |
-| Extras | Partage de fichiers Samba, Ollama dans son propre namespace |
+| Extras | Partage de fichiers Samba |
 
 ## Par où commencer
 

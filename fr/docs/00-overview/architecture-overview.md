@@ -11,7 +11,7 @@ Couches, flux des requêtes et organisation des répertoires de l'installation. 
 | 3 | Docker | Construction et test des images |
 | 4 | K3s (nœud unique) | Exécute les conteneurs sous forme de Pods, les redémarre, fournit la découverte de services |
 | 5 | Traefik (intégré à K3s) | Ingress controller : route le HTTP selon le nom d'hôte |
-| 6 | Namespaces | Un par projet (`<PROJECT_NAME>`), plus `monitoring`, `ai` et similaires |
+| 6 | Namespaces | Un par projet (`<PROJECT_NAME>`), plus `monitoring` et similaires |
 
 ## Flux des requêtes
 
@@ -42,8 +42,6 @@ Le code et la configuration d'exécution sont séparés dans deux arborescences 
 ├── system/
 │   ├── ingress/                     # paramètres globaux de Traefik
 │   └── monitoring/                  # values de Prometheus, Grafana, Loki
-├── ai-models/
-│   └── ollama/
 └── projects/
     └── <PROJECT_NAME>/
         ├── db.yaml               # Deployment + Service (+ PVC)

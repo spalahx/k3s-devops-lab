@@ -7,7 +7,7 @@ Une seule machine Ubuntu Server (un mini-PC à domicile ou un VPS dans le cloud)
 - Un hôte Linux toujours allumé avec un point d'entrée SSH renforcé (connexion par clé uniquement, pare-feu, protection contre la force brute).
 - Docker pour construire les images et K3s pour les exécuter ; Traefik route le trafic HTTP vers les projets selon le nom d'hôte.
 - Du code sur le serveur, édité depuis l'IDE du portable via Remote-SSH ; les modifications apparaissent dans les Pods en cours d'exécution grâce aux volumes `hostPath`.
-- Optionnel : accès distant via un VPS, CI/CD, supervision (Prometheus, Grafana, Loki), stockage de fichiers, LLM locaux.
+- Optionnel : accès distant via un VPS, CI/CD, supervision (Prometheus, Grafana, Loki), stockage de fichiers.
 
 ## Quand c'est utile
 
@@ -15,7 +15,7 @@ Une seule machine Ubuntu Server (un mini-PC à domicile ou un VPS dans le cloud)
 - **Serveur de développement partagé pour une petite équipe.** Un hôte, un namespace par projet, chacun se connecte en SSH avec sa propre clé.
 - **Travail parallèle sur plusieurs projets et tests d'intégration.** Plusieurs projets tournent côte à côte sur des noms d'hôte différents, sans conflit de ports ni de dépendances.
 - **Environnement proche de la production.** Les mêmes objets Kubernetes (Deployment, Service, Ingress) que ceux utilisés en production sont exercés pendant le développement.
-- **Expérimentations.** Namespaces jetables, nouveaux outils, LLM locaux (Ollama) avec des limites de ressources pour ne pas priver les autres projets.
+- **Expérimentations.** Namespaces jetables et nouveaux outils avec des limites de ressources pour ne pas priver les autres projets.
 
 ## Ordre de lecture
 

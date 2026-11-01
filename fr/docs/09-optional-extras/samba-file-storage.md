@@ -134,4 +134,4 @@ Depuis le portable : créez un fichier dans le lecteur monté et vérifiez-le su
 | Partage disparu après un redémarrage | Service non activé : `systemctl is-enabled smbd` |
 | La connexion se rompt quand l'IP du serveur change | Réservez l'IP dans le routeur ou utilisez l'adressage statique netplan |
 
-Suite : [Ollama dans un namespace dédié](ollama-ai-namespace.md)
+Suite : [Glossaire](../99-appendix/glossary.md)

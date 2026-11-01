@@ -10,7 +10,6 @@ Matériel, logiciels et comptes nécessaires avant de commencer, et chaque espac
 | RAM | 4 Go (K3s seul environ 1 Go) | 16 Go ou plus (plusieurs projets, supervision) |
 | Disque | SSD de 40 Go | SSD de 250 Go ou plus |
 | Réseau | Ethernet filaire | Ethernet filaire, routeur avec réservation DHCP |
-| LLM locaux (optionnel) | 16 Go de RAM | 32 Go de RAM ou plus, ou un GPU compatible |
 
 Préférez l'Ethernet au Wi-Fi pour un serveur (voir [Dépannage réseau](../99-appendix/troubleshooting-networking.md)).
 
