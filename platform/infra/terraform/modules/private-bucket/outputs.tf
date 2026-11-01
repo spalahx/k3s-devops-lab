@@ -1,3 +1,8 @@
+output "name" {
+  description = "Bucket name as configured (known before apply)."
+  value       = var.bucket_name
+}
+
 output "id" {
   description = "Bucket name."
   value       = aws_s3_bucket.this.id

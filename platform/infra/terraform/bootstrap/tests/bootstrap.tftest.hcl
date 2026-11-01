@@ -36,12 +36,12 @@ run "buckets_are_private_versioned_and_encrypted" {
   }
 
   assert {
-    condition     = module.state_bucket.id == "k3s-devops-lab-state-123456789012"
+    condition     = module.state_bucket.name == "k3s-devops-lab-state-123456789012"
     error_message = "State bucket name must include the project and the account id."
   }
 
   assert {
-    condition     = module.backup_bucket.id == "k3s-devops-lab-backups-123456789012"
+    condition     = module.backup_bucket.name == "k3s-devops-lab-backups-123456789012"
     error_message = "Backup bucket name must include the project and the account id."
   }
 }

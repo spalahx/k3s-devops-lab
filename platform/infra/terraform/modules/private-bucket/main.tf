@@ -1,11 +1,11 @@
 # A private, versioned, encrypted bucket that accepts TLS requests only.
 # SSE-S3 (AES256) is used instead of a customer managed KMS key to avoid the monthly key fee.
 
-#checkov:skip=CKV_AWS_18:Access logging needs a second bucket; not worth it for a learning lab
-#checkov:skip=CKV_AWS_144:Cross-region replication doubles the cost; versioning and lifecycle are enough here
-#checkov:skip=CKV_AWS_145:SSE-S3 is chosen on purpose, a customer managed key costs a monthly fee
-#checkov:skip=CKV2_AWS_62:Nothing consumes S3 event notifications in this lab
 resource "aws_s3_bucket" "this" {
+  #checkov:skip=CKV_AWS_18:Access logging needs a second bucket; not worth it for a learning lab
+  #checkov:skip=CKV_AWS_144:Cross-region replication doubles the cost; versioning and lifecycle are enough here
+  #checkov:skip=CKV_AWS_145:SSE-S3 is chosen on purpose, a customer managed key costs a monthly fee
+  #checkov:skip=CKV2_AWS_62:Nothing consumes S3 event notifications in this lab
   bucket = var.bucket_name
 }
 
@@ -50,7 +50,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
   bucket = aws_s3_bucket.this.id
 
   rule {
-    id     = "abort-incomplete-multipart-uploads"
+    id     = "housekeeping"
     status = "Enabled"
 
     filter {}
@@ -58,13 +58,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
     abort_incomplete_multipart_upload {
       days_after_initiation = 7
     }
-  }
-
-  rule {
-    id     = "expire-noncurrent-versions"
-    status = "Enabled"
-
-    filter {}
 
     noncurrent_version_expiration {
       noncurrent_days = var.noncurrent_version_days
@@ -79,6 +72,10 @@ resource "aws_s3_bucket_lifecycle_configuration" "this" {
       status = "Enabled"
 
       filter {}
+
+      abort_incomplete_multipart_upload {
+        days_after_initiation = 7
+      }
 
       expiration {
         days = rule.value
