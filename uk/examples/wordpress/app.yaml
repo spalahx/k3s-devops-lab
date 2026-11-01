@@ -30,7 +30,7 @@ spec:
           mountPath: /var/www/html
       # Nginx: статичні файли + FastCGI до PHP-FPM на 127.0.0.1:9000 (той самий под = та сама мережа)
       - name: nginx
-        image: nginx:alpine
+        image: nginx:1.30.6-alpine   # stable line, exact tag checked 2026-11
         ports:
         - containerPort: 80
         volumeMounts:
