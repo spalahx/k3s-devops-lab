@@ -1,5 +1,7 @@
 # ProxyJump Client Config
 
+> **Status: not verified on real hardware.** The reference server this guide was checked against has no reverse tunnel service and no VPS gateway, so the steps on this page were written from documentation and have not been run end to end. Treat the commands as a starting point and verify each one.
+
 Configures `~/.ssh/config` on the laptop so that one alias, `ssh home-server`, works both on the home network (direct) and away (through the VPS via the reverse tunnel). Requires the [reverse tunnel](reverse-ssh-tunnel-systemd.md) to be running. `ProxyJump` (`-J`) makes the SSH client open a connection to an intermediate host and tunnel the real connection through it.
 
 ## 1. Away-from-home entries
