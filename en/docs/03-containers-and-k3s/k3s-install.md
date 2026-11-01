@@ -16,7 +16,7 @@ Useful installer options (environment variables or flags after `sh -s -`):
 |---|---|
 | `INSTALL_K3S_EXEC="--write-kubeconfig-mode 644"` | Make `/etc/rancher/k3s/k3s.yaml` world-readable so `kubectl` works without `sudo` (acceptable on a single-user box; otherwise use step 3) |
 | `INSTALL_K3S_EXEC="--disable traefik"` | Do not deploy Traefik (only if you bring another ingress controller). Default install keeps it; the next pages rely on it |
-| `INSTALL_K3S_VERSION=v1.30.4+k3s1` | Pin a specific version instead of the stable channel |
+| `INSTALL_K3S_VERSION=v1.36.4+k3s1` | Pin a specific version instead of the stable channel (the version used on the reference server; check the current stable release before installing) |
 
 Example with an option:
 

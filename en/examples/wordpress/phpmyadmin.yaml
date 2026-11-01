@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: phpmyadmin
-        image: phpmyadmin:5
+        image: phpmyadmin:5.2.3   # exact tag checked 2026-11
         env:
         - name: PMA_HOST                 # Service name from db.yaml
           value: "<PROJECT_NAME>-db-service"

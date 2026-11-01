@@ -30,7 +30,7 @@ spec:
           mountPath: /var/www/html
       # Nginx: static files + FastCGI to PHP-FPM on 127.0.0.1:9000 (same pod = same network)
       - name: nginx
-        image: nginx:alpine
+        image: nginx:1.30.6-alpine   # stable line, exact tag checked 2026-11
         ports:
         - containerPort: 80
         volumeMounts:
