@@ -1,0 +1,21 @@
+# Pinned tool versions for the lab (D-031). `task doctor` compares the installed
+# tools with this file. Versions checked against upstream releases on 2026-11-01.
+# Install everything with: mise install
+
+[tools]
+terraform = "1.17.1"
+task = "3.54.0"
+kubectl = "1.36.4"       # keep within one minor version of the K3s version we deploy
+helm = "4.3.1"
+sops = "3.13.3"
+age = "1.3.2"
+tflint = "0.65.0"
+trivy = "0.76.1"
+gitleaks = "8.30.1"
+shellcheck = "0.11.0"
+kubeconform = "0.8.0"
+lychee = "0.24.2"
+"pipx:ansible-core" = "2.21.5"
+"pipx:checkov" = "3.4.0"
+"pipx:yamllint" = "1.38.0"
+"npm:markdownlint-cli2" = "0.24.0"
