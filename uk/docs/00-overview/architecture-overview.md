@@ -11,7 +11,7 @@
 | 3 | Docker | Збирання та тестування образів |
 | 4 | K3s (один вузол) | Запускає контейнери як Pod, перезапускає їх, забезпечує service discovery |
 | 5 | Traefik (входить до K3s) | Ingress-контролер: маршрутизує HTTP за іменем хоста |
-| 6 | Namespace | По одному на проєкт (`<PROJECT_NAME>`), а також `monitoring`, `ai` тощо |
+| 6 | Namespace | По одному на проєкт (`<PROJECT_NAME>`), а також `monitoring` тощо |
 
 ## Шлях запиту
 
@@ -42,8 +42,6 @@ flowchart LR
 ├── system/
 │   ├── ingress/                     # глобальні налаштування Traefik
 │   └── monitoring/                  # values для Prometheus, Grafana, Loki
-├── ai-models/
-│   └── ollama/
 └── projects/
     └── <PROJECT_NAME>/
         ├── db.yaml               # Deployment + Service (+ PVC)

@@ -134,4 +134,4 @@ smbclient -L localhost -U <SERVER_USER>
 | Ресурс зникає після перезавантаження | Службу не ввімкнено: `systemctl is-enabled smbd` |
 | З'єднання розривається, коли змінюється IP сервера | Зарезервуйте IP у роутері або використовуйте статичну адресацію netplan |
 
-Далі: [Ollama в окремому namespace](ollama-ai-namespace.md)
+Далі: [Глосарій](../99-appendix/glossary.md)
