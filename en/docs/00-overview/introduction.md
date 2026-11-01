@@ -7,7 +7,7 @@ A single Ubuntu Server machine (a home mini-PC or a cloud VPS) runs K3s, a light
 - One always-on Linux host with a hardened SSH entry point (key-only login, firewall, brute-force protection).
 - Docker for building images and K3s for running them; Traefik routes HTTP traffic to projects by hostname.
 - Code on the server edited from the laptop IDE via Remote-SSH; changes show up in running Pods through `hostPath` volumes.
-- Optional: remote access through a VPS, CI/CD, monitoring (Prometheus, Grafana, Loki), file storage, local LLMs.
+- Optional: remote access through a VPS, CI/CD, monitoring (Prometheus, Grafana, Loki), file storage.
 
 ## When it is useful
 
@@ -15,7 +15,7 @@ A single Ubuntu Server machine (a home mini-PC or a cloud VPS) runs K3s, a light
 - **Shared dev server for a small team.** One host, one namespace per project, everybody connects over SSH with their own key.
 - **Parallel multi-project work and integration testing.** Several projects run side by side on different hostnames without port or dependency conflicts.
 - **Prod-like environment.** The same Kubernetes objects (Deployment, Service, Ingress) used in production are exercised during development.
-- **Experiments.** Throwaway namespaces, new tooling, local LLMs (Ollama) with resource limits so they do not starve other projects.
+- **Experiments.** Throwaway namespaces and new tooling with resource limits so they do not starve other projects.
 
 ## Reading order
 

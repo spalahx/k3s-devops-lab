@@ -11,7 +11,7 @@ Layers, request flow and directory layout of the setup. Read it once before the 
 | 3 | Docker | Building and testing images |
 | 4 | K3s (single node) | Runs containers as Pods, restarts them, provides service discovery |
 | 5 | Traefik (bundled with K3s) | Ingress controller: routes HTTP by hostname |
-| 6 | Namespaces | One per project (`<PROJECT_NAME>`), plus `monitoring`, `ai` and similar |
+| 6 | Namespaces | One per project (`<PROJECT_NAME>`), plus `monitoring` and similar |
 
 ## Request flow
 
@@ -42,8 +42,6 @@ Code and run configuration are kept in separate trees with identical project nam
 ├── system/
 │   ├── ingress/                     # global Traefik settings
 │   └── monitoring/                  # Prometheus, Grafana, Loki values
-├── ai-models/
-│   └── ollama/
 └── projects/
     └── <PROJECT_NAME>/
         ├── db.yaml               # Deployment + Service (+ PVC)

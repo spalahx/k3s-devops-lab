@@ -15,7 +15,7 @@ The same stack runs on a home mini-PC or on a cloud VPS. This page lists what di
 | DNS and domains | `/etc/hosts` entries or local DNS (`*.local` names) | Real DNS A records pointing to the VPS IP; TLS certificates possible |
 | Power and cost | Hardware purchase, electricity, UPS optional; runs 24/7 at low wattage | Monthly fee scaled to CPU/RAM; no hardware |
 | Exposure risk | Low unless ports are forwarded | High from the first minute: bots scan new IPs, harden before anything else |
-| Resources | Fixed by your hardware | Resizable; local LLMs usually too expensive |
+| Resources | Fixed by your hardware | Resizable |
 
 ## What to skip or adapt
 
@@ -29,7 +29,6 @@ The same stack runs on a home mini-PC or on a cloud VPS. This page lists what di
 | [VPS gateway](../06-remote-access/vps-gateway-setup.md), [reverse tunnel](../06-remote-access/reverse-ssh-tunnel-systemd.md), [ProxyJump](../06-remote-access/proxyjump-client-config.md) | Needed for access from outside the LAN | Skip, except ProxyJump if you add a private node behind the VPS |
 | [Monitoring](../08-monitoring/helm-basics.md) | Follow | Follow; watch memory on small plans |
 | [Samba](../09-optional-extras/samba-file-storage.md) | LAN only | Do not expose SMB to the internet; skip or tunnel over SSH |
-| [Ollama](../09-optional-extras/ollama-ai-namespace.md) | Depends on RAM | Needs a large plan; often skipped |
 | [Network troubleshooting](../99-appendix/troubleshooting-networking.md) | Applies | Not applicable |
 
 > **Warning:** On a VPS, do not close your only SSH session while changing the SSH port or UFW rules. Open a second session and test the new settings before logging out; recovery requires the provider's web console.

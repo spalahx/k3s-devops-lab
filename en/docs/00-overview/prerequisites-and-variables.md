@@ -10,7 +10,6 @@ Hardware, software and accounts needed before starting, and every placeholder us
 | RAM | 4 GB (K3s alone about 1 GB) | 16 GB+ (several projects, monitoring) |
 | Disk | 40 GB SSD | 250 GB+ SSD |
 | Network | Wired Ethernet | Wired Ethernet, router with DHCP reservation |
-| Local LLMs (optional) | 16 GB RAM | 32 GB+ RAM or a supported GPU |
 
 Prefer Ethernet over Wi-Fi for a server (see [Network troubleshooting](../99-appendix/troubleshooting-networking.md)).
 

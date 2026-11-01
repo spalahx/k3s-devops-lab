@@ -22,7 +22,6 @@ Every stage in order. A stage is done when its check passes. Stages marked optio
 - [ ] **18. CI/CD (optional).** Pipeline builds and deploys a pet project on push. See [GitLab CI pipeline](../07-cicd/gitlab-ci-petproject-pipeline.md).
 - [ ] **19. Monitoring (optional).** Grafana shows node and Pod metrics and logs. Check: `helm list -A`. See [Helm basics](../08-monitoring/helm-basics.md), [Prometheus and Grafana](../08-monitoring/prometheus-grafana.md), [Loki](../08-monitoring/loki-logs.md).
 - [ ] **20. File storage (optional).** Share mounts from another machine with a restricted user. See [Samba](../09-optional-extras/samba-file-storage.md).
-- [ ] **21. Local LLMs (optional).** Ollama answers inside the cluster with resource limits set. See [Ollama](../09-optional-extras/ollama-ai-namespace.md).
 
 Concepts: [Glossary](glossary.md). Network problems on local hardware: [Troubleshooting](troubleshooting-networking.md).
 

@@ -63,7 +63,6 @@ Read in order. Each page ends with a link to the next one. Placeholders like `<S
 ## Optional extras
 
 - [Samba File Storage](docs/09-optional-extras/samba-file-storage.md)
-- [Ollama in a Separate Namespace](docs/09-optional-extras/ollama-ai-namespace.md)
 
 ## Appendix
 
