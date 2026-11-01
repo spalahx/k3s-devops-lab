@@ -28,7 +28,7 @@ Prefer Ethernet over Wi-Fi for a server (see [Network troubleshooting](../99-app
 | `<SERVER_HOSTNAME>` | Server hostname | `devbox` |
 | `<SERVER_IP>` | Server address on the LAN (or public IP of a VPS) | `192.168.1.50` |
 | `<SSH_PORT>` | Custom SSH port chosen during hardening | `2222` |
-| `<DOMAIN_BASE>` | Base domain or local suffix for project hostnames | `devbox.local`, `example.com` |
+| `<DOMAIN_BASE>` | Base domain or local suffix for project hostnames | `devbox.test`, `example.com` |
 | `<PROJECT_NAME>` | Short lowercase project name, used for folder, namespace and hostname | `blog` |
 | `<VPS_IP>` | Public IP of the gateway VPS | `203.0.113.10` |
 | `<GIT_WORK_EMAIL>` | E-mail for work commits | `me@work.example` |

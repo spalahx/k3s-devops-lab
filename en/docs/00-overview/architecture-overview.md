@@ -7,7 +7,7 @@ Layers, request flow and directory layout of the setup. Read it once before the 
 | Layer | Component | Role |
 |---|---|---|
 | 1 | Ubuntu Server LTS | OS, static IP, users, SSH |
-| 2 | UFW, Fail2ban, key-only SSH | Perimeter security |
+| 2 | UFW, Fail2ban, key-only SSH | Protects SSH and services running on the host (UFW does not filter ports that K3s publishes, such as 80/443) |
 | 3 | Docker | Building and testing images |
 | 4 | K3s (single node) | Runs containers as Pods, restarts them, provides service discovery |
 | 5 | Traefik (bundled with K3s) | Ingress controller: routes HTTP by hostname |

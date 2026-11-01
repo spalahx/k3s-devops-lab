@@ -6,7 +6,7 @@ Installs Ubuntu Server LTS on a bare machine from a USB stick. Skip it if the ma
 
 | Choice | Value |
 |---|---|
-| Distribution | Ubuntu Server (no desktop), latest LTS (for example 24.04 LTS; LTS = 5 years of security updates) |
+| Distribution | Ubuntu Server (no desktop), latest LTS (for example 26.04 LTS; LTS = 5 years of security updates) |
 | Architecture | `amd64` for Intel/AMD machines, `arm64` for ARM boards. A wrong architecture does not boot |
 | Download | `https://ubuntu.com/download/server` (ISO is about 2 GB) |
 
