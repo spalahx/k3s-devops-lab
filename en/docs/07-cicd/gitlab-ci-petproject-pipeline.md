@@ -151,9 +151,9 @@ variables:
 
 build:
   stage: build
-  image: docker:29.9.2
+  image: docker:27
   services:
-    - docker:29.9.2-dind
+    - docker:27-dind
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   tags: [k3s]
@@ -181,7 +181,7 @@ deploy:
 | Item | Explanation |
 |---|---|
 | `$CI_COMMIT_SHORT_SHA` | Predefined by GitLab; a unique tag per commit, so the running version is traceable |
-| `docker:29.9.2-dind` | Docker-in-Docker service so the job can run `docker build` |
+| `docker:27-dind` | Docker-in-Docker service so the job can run `docker build` |
 | `DOCKER_TLS_CERTDIR` | Makes the client and the dind daemon share TLS certificates; omitting it gives `Cannot connect to the Docker daemon` |
 | `$CI_REGISTRY_*` | Predefined; the job token logs in to the project's registry automatically |
 | `alpine/k8s:<KUBECTL_VERSION>` | Image with `kubectl` and a shell. `kubectl` may differ from the cluster by at most one minor version, so pick the tag from the cluster: `kubectl version` prints the server version (for example `v1.36.4` means a `1.36.x` tag). Pin the exact tag, not `latest` |
