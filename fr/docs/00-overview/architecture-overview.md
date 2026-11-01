@@ -7,7 +7,7 @@ Couches, flux des requêtes et organisation des répertoires de l'installation. 
 | Couche | Composant | Rôle |
 |---|---|---|
 | 1 | Ubuntu Server LTS | Système d'exploitation, IP statique, utilisateurs, SSH |
-| 2 | UFW, Fail2ban, SSH par clé uniquement | Sécurité du périmètre |
+| 2 | UFW, Fail2ban, SSH par clé uniquement | Protège SSH et les services de l'hôte (UFW ne filtre pas les ports publiés par K3s, comme 80/443) |
 | 3 | Docker | Construction et test des images |
 | 4 | K3s (nœud unique) | Exécute les conteneurs sous forme de Pods, les redémarre, fournit la découverte de services |
 | 5 | Traefik (intégré à K3s) | Ingress controller : route le HTTP selon le nom d'hôte |
