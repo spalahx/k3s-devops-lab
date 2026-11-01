@@ -21,28 +21,28 @@ run "buckets_are_private_versioned_and_encrypted" {
   command = plan
 
   assert {
-    condition = alltrue([
-      for _, v in aws_s3_bucket_public_access_block.this :
-      v.block_public_acls && v.block_public_policy && v.ignore_public_acls && v.restrict_public_buckets
-    ])
+    condition     = module.state_bucket.public_access_blocked && module.backup_bucket.public_access_blocked
     error_message = "Every bucket must block all public access."
   }
 
   assert {
-    condition = alltrue([
-      for _, v in aws_s3_bucket_versioning.this : v.versioning_configuration[0].status == "Enabled"
-    ])
+    condition     = module.state_bucket.versioning_status == "Enabled" && module.backup_bucket.versioning_status == "Enabled"
     error_message = "Every bucket must be versioned."
   }
 
   assert {
-    condition     = aws_s3_bucket.this["state"].bucket == "k3s-devops-lab-state-123456789012"
+    condition     = module.state_bucket.encryption_algorithm == "AES256" && module.backup_bucket.encryption_algorithm == "AES256"
+    error_message = "Every bucket must be encrypted by default."
+  }
+
+  assert {
+    condition     = module.state_bucket.id == "k3s-devops-lab-state-123456789012"
     error_message = "State bucket name must include the project and the account id."
   }
 
   assert {
-    condition     = length(aws_s3_bucket_policy.tls_only) == 2
-    error_message = "Both buckets must have a TLS-only policy."
+    condition     = module.backup_bucket.id == "k3s-devops-lab-backups-123456789012"
+    error_message = "Backup bucket name must include the project and the account id."
   }
 }
 

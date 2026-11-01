@@ -1,11 +1,11 @@
 output "state_bucket" {
   description = "Bucket for Terraform state (use it in backend.hcl)."
-  value       = aws_s3_bucket.this["state"].id
+  value       = module.state_bucket.id
 }
 
 output "backup_bucket" {
   description = "Bucket for backups."
-  value       = aws_s3_bucket.this["backups"].id
+  value       = module.backup_bucket.id
 }
 
 output "github_oidc_provider_arn" {

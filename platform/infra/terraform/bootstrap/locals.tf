@@ -13,13 +13,8 @@ locals {
     ManagedBy = "terraform"
   }
 
-  # Both buckets are versioned. Noncurrent versions are kept for a limited time.
-  buckets = {
-    state   = { noncurrent_days = 90 }
-    backups = { noncurrent_days = 30 }
-  }
-
   bucket_names = {
-    for key, _ in local.buckets : key => "${var.project}-${key}-${local.account_id}"
+    state   = "${var.project}-state-${local.account_id}"
+    backups = "${var.project}-backups-${local.account_id}"
   }
 }

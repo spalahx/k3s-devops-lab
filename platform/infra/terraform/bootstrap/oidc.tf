@@ -28,7 +28,7 @@ locals {
     })
   }
 
-  state_bucket_arn = aws_s3_bucket.this["state"].arn
+  state_bucket_arn = module.state_bucket.arn
   read_only_arn    = "arn:${local.partition}:iam::aws:policy/ReadOnlyAccess"
   lab_prefix       = "${var.project}-lab"
 }
@@ -184,7 +184,23 @@ resource "aws_iam_policy" "apply_lab" {
       {
         Sid    = "LabBuckets"
         Effect = "Allow"
-        Action = ["s3:*"]
+        Action = [
+          "s3:CreateBucket",
+          "s3:DeleteBucket",
+          "s3:ListBucket",
+          "s3:GetBucket*",
+          "s3:PutBucket*",
+          "s3:DeleteBucketPolicy",
+          "s3:GetLifecycleConfiguration",
+          "s3:PutLifecycleConfiguration",
+          "s3:GetEncryptionConfiguration",
+          "s3:PutEncryptionConfiguration",
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "s3:DeleteObjectVersion",
+        ]
         Resource = [
           "arn:${local.partition}:s3:::${local.lab_prefix}-*",
           "arn:${local.partition}:s3:::${local.lab_prefix}-*/*",
