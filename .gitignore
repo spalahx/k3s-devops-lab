@@ -1,3 +1,18 @@
 .DS_Store
 .idea/
 ._*
+
+# Local configuration and secrets (examples are committed, real files are not)
+config/platform.yaml
+access/users.yaml
+*.age
+age.key
+.env
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+!*.example.tfvars

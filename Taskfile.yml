@@ -1,0 +1,51 @@
+version: "3"
+
+# Single entry point. Only targets that already work are listed here;
+# `up`, `down`, `status` arrive with the AWS target (stage 4).
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list
+    silent: true
+
+  doctor:
+    desc: Compare installed tools with the versions pinned in .mise.toml
+    cmds:
+      - ./scripts/doctor.sh
+
+  lint:
+    desc: Run all static checks
+    deps: [lint:yaml, lint:shell, lint:md, lint:links, lint:secrets, lint:iac]
+
+  lint:yaml:
+    desc: yamllint on workflows, config and platform files (the frozen v1 examples are excluded)
+    cmds:
+      - yamllint -c .yamllint.yaml .github config access platform Taskfile.yml
+
+  lint:shell:
+    desc: shellcheck on scripts
+    cmds:
+      - shellcheck scripts/*.sh
+
+  lint:md:
+    desc: markdownlint on v2 documents (the frozen v1 guide is excluded)
+    cmds:
+      - markdownlint-cli2 "docs/**/*.md" "platform/**/*.md" "*.md" "!README.*.md"
+
+  lint:links:
+    desc: Check relative links in all Markdown files (offline, no network)
+    cmds:
+      - lychee --offline --no-progress --config .lychee.toml .
+
+  lint:secrets:
+    desc: gitleaks over the whole git history
+    cmds:
+      - gitleaks git --config .gitleaks.toml --redact --no-banner .
+
+  lint:iac:
+    desc: Static checks of Terraform, Kubernetes manifests and Dockerfiles
+    cmds:
+      - trivy config --severity HIGH,CRITICAL --exit-code 1 platform
+      - checkov --quiet --compact --directory platform --framework terraform,kubernetes,dockerfile,github_actions

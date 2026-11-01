@@ -1,0 +1,8 @@
+title = "k3s-devops-lab"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Placeholders and documented examples"
+regexes = ['''<[A-Z_]+>''']

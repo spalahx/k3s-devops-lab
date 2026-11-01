@@ -1,0 +1,3 @@
+# Offline check of relative links only.
+offline = true
+exclude_path = ["kb", "features", ".git"]
