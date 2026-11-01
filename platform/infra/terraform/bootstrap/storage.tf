@@ -37,6 +37,7 @@ resource "aws_s3_bucket_versioning" "this" {
   }
 }
 
+# trivy:ignore:AWS-0132 SSE-S3 is chosen on purpose: a customer managed key costs a monthly fee and adds nothing for a learning lab.
 resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   for_each = aws_s3_bucket.this
 

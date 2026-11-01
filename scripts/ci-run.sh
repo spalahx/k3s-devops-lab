@@ -10,7 +10,7 @@ rc=0
 out="$("$@" 2>&1)" || rc=$?
 printf '%s\n' "$out"
 if [ "$rc" -ne 0 ] && [ "${GITHUB_ACTIONS:-}" = "true" ]; then
-  body="$(printf '%s' "$out" | tail -c 3000 | awk 'BEGIN{ORS="%0A"} {gsub(/%/,"%25"); gsub(/\r/,"%0D"); print}')"
+  body="$(printf '%s' "$out" | tail -c 16000 | awk 'BEGIN{ORS="%0A"} {gsub(/%/,"%25"); gsub(/\r/,"%0D"); print}')"
   echo "::error title=${title}::${body}"
 fi
 exit "$rc"

@@ -11,7 +11,7 @@ failed=0
 annotate() { # title, text
   [ "${GITHUB_ACTIONS:-}" = "true" ] || return 0
   local body
-  body="$(printf '%s' "$2" | head -c 3000 | awk 'BEGIN{ORS="%0A"} {gsub(/%/,"%25"); gsub(/\r/,"%0D"); print}')"
+  body="$(printf '%s' "$2" | head -c 16000 | awk 'BEGIN{ORS="%0A"} {gsub(/%/,"%25"); gsub(/\r/,"%0D"); print}')"
   echo "::error title=${1}::${body}"
 }
 
