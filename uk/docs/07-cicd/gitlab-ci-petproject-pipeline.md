@@ -151,9 +151,9 @@ variables:
 
 build:
   stage: build
-  image: docker:29.9.2
+  image: docker:27
   services:
-    - docker:29.9.2-dind
+    - docker:27-dind
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   tags: [k3s]
@@ -181,7 +181,7 @@ deploy:
 | Елемент | Пояснення |
 |---|---|
 | `$CI_COMMIT_SHORT_SHA` | Попередньо визначена змінна GitLab; унікальний тег для кожного коміту, тож запущену версію можна відстежити |
-| `docker:29.9.2-dind` | Сервіс Docker-in-Docker, щоб завдання могло виконувати `docker build` |
+| `docker:27-dind` | Сервіс Docker-in-Docker, щоб завдання могло виконувати `docker build` |
 | `DOCKER_TLS_CERTDIR` | Змушує клієнт і демон dind використовувати спільні TLS-сертифікати; без нього виникає `Cannot connect to the Docker daemon` |
 | `$CI_REGISTRY_*` | Попередньо визначені; токен завдання автоматично авторизується в registry проєкту |
 | `alpine/k8s:<KUBECTL_VERSION>` | Образ із `kubectl` і оболонкою. `kubectl` може відрізнятися від кластера не більше ніж на одну мінорну версію, тому беріть тег за кластером: `kubectl version` показує версію сервера (наприклад, `v1.36.4` означає тег `1.36.x`). Закріплюйте точний тег, не `latest` |
