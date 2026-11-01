@@ -43,6 +43,7 @@ Prefer Ethernet over Wi-Fi for a server (see [Network troubleshooting](../99-app
 | `<VPS_USER>` | Admin user on the gateway VPS | `admin` |
 | `<TUNNEL_USER>`, `<TUNNEL_PORT>` | Restricted user on the VPS and the port the tunnel listens on | `tunnel`, `2200` |
 | `<GRAFANA_ADMIN_PASSWORD>`, `<SAMBA_PASSWORD>` | Passwords you generate | not stored in the repo |
+| `<KUBECTL_VERSION>` | Tag of the `alpine/k8s` image used in CI; must be within one minor version of the cluster (`kubectl version`) | `1.36.4` |
 
 Naming rules: `<PROJECT_NAME>` must be a valid Kubernetes name (lowercase letters, digits, `-`). Keep it identical in the code directory, manifest directory, namespace and hostname.
 
