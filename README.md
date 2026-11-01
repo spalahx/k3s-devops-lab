@@ -60,6 +60,17 @@ flowchart LR
 
 The manual guide documents one real home-server setup and was written from the author's notes; it has not been replayed from scratch. See [known differences and problems not covered](en/docs/99-appendix/known-differences.md). An automated, tested version for AWS is in development.
 
+## Two tracks
+
+| Track | State | What it is |
+|---|---|---|
+| Manual guide (v1) | published, see status above | Step-by-step setup of a K3s dev server, in four languages |
+| Automated lab (v2) | in development | One command brings up a K3s lab on AWS, then checks itself. Planned: v3 adds your own hardware and a laptop VM, v4 adds a second cloud |
+
+### Preconditions for the automated lab (work in progress)
+
+Linux, macOS or Windows with WSL2. Tool versions are pinned in [`.mise.toml`](.mise.toml); install them with `mise install` and check with `task doctor`. An AWS account is needed only from the stage that creates cloud resources.
+
 ## Start here
 
 - [English documentation](en/README.md)
