@@ -61,6 +61,8 @@ ssh <SERVER_HOSTNAME>
 
 Ubuntu читает drop-in файлы из `/etc/ssh/sshd_config.d/`, при этом побеждает первое значение, поэтому файл с префиксом `01-` переопределяет значения по умолчанию облачных образов (`50-cloud-init.conf` может задавать `PasswordAuthentication yes`).
 
+> **Warning:** не записывайте эти строки вместо этого в основной `/etc/ssh/sshd_config`. `Include` для `sshd_config.d/*.conf` стоит выше них, поэтому `PasswordAuthentication yes` из `50-cloud-init.conf` всё равно побеждает, и вход по паролю остаётся включённым, хотя в основном файле написано `no`. Всегда проверяйте результат через `sudo sshd -T` (ниже).
+
 ```bash
 sudo tee /etc/ssh/sshd_config.d/01-hardening.conf >/dev/null <<'CONF'
 PasswordAuthentication no
@@ -87,7 +89,27 @@ sudo sshd -T | grep -E "^(passwordauthentication|permitrootlogin|pubkeyauthentic
 3. Проверьте новый порт из второго терминала.
 4. Только потом уберите порт 22.
 
-В Ubuntu 22.10+ (включая 24.04) SSH запускается через **socket activation**: `ssh.socket` владеет слушающим портом и, в зависимости от релиза, игнорирует `Port` из `sshd_config`. Задайте порт на сокете:
+SSH в Ubuntu запускается через **socket activation**: `ssh.socket` владеет слушающим портом. Как выбирается порт, зависит от релиза:
+
+- **Ubuntu 26.04 (проверено на эталонном сервере):** слушающие адреса генерируются из `sshd_config` (`/run/systemd/generator/ssh.socket.d/addresses.conf`, создаётся `sshd-socket-generator`), поэтому достаточно задать `Port`. Файл юнита `systemctl cat ssh.socket` по-прежнему показывает `ListenStream=22`; это ожидаемо, сгенерированный файл его переопределяет.
+- **Ubuntu 22.10–24.04:** сокет может игнорировать `Port` из `sshd_config`; задайте порт на сокете через drop-in (см. «Старые релизы» ниже).
+
+В 26.04 на время миграции оставьте оба порта:
+
+```bash
+sudo tee /etc/ssh/sshd_config.d/02-port.conf >/dev/null <<'CONF'
+Port 22
+Port <SSH_PORT>
+CONF
+sudo sshd -t && echo OK
+sudo systemctl daemon-reload      # генератор перечитывает sshd_config
+sudo systemctl restart ssh.socket
+sudo ss -tlnp | grep -E "sshd|:22 |:<SSH_PORT> "
+```
+
+В выводе `ss` должны быть оба порта. Если виден только 22, сгенерированный сокет не обновился: повторите `daemon-reload` и перезапуск или используйте drop-in из раздела «Старые релизы».
+
+**Старые релизы (22.10–24.04) и запасной вариант:**
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ssh.socket.d
@@ -114,8 +136,10 @@ ssh -p <SSH_PORT> <SERVER_USER>@<SERVER_IP>
 
 Когда вход стабильно работает, уберите порт 22:
 
+В 26.04 удалите строку `Port 22` из `/etc/ssh/sshd_config.d/02-port.conf`; при варианте с drop-in сокета вместо этого удалите `ListenStream=22` из `listen.conf`. Затем:
+
 ```bash
-sudo sed -i '/^ListenStream=22$/d' /etc/systemd/system/ssh.socket.d/listen.conf
+sudo sed -i '/^Port 22$/d' /etc/ssh/sshd_config.d/02-port.conf      # 26.04 (вариант с drop-in: правьте listen.conf)
 sudo systemctl daemon-reload && sudo systemctl restart ssh.socket
 sudo ufw delete allow 22/tcp          # если вы его открывали
 ```
@@ -134,7 +158,8 @@ ssh root@<SERVER_IP> -p <SSH_PORT>                     # Permission denied
 | Симптом | Решение |
 |---|---|
 | `Permission denied (publickey)` | На сервере: `chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys`; через `ssh -v <SERVER_HOSTNAME>` проверьте, что предлагается нужный ключ; убедитесь, что копировали файл `.pub` |
-| Смена порта не действует | `ss -tlnp` по-прежнему показывает только 22: drop-in сокета не применён; повторите `daemon-reload` и `restart ssh.socket` |
+| Смена порта не действует | `ss -tlnp` по-прежнему показывает только 22: повторите `daemon-reload` и `restart ssh.socket`; на релизах до 24.04 drop-in сокета обязателен |
+| Вход по паролю всё ещё работает | Какой-то drop-in (например, `50-cloud-init.conf`) задаёт `PasswordAuthentication yes` раньше вашего значения; проверьте `sudo grep -ri passwordauth /etc/ssh/` и `sudo sshd -T` |
 | Connection refused на новом порту | Порт не слушается (`ss -tlnp`) или заблокирован: `sudo ufw status`, `sudo journalctl -u ssh -n 50` |
 | Потерян доступ | Нужна консоль: исправьте `/etc/ssh/sshd_config.d/*` и drop-in сокета, перезапустите `ssh.socket` |
 
